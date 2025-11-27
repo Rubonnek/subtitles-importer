@@ -1,0 +1,46 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="EmptyProject"
+run/main_scene="res://demos/00_inject_subtitles_into_animation_player/inject_subtitles_into_animation_player.tscn"
+config/features=PackedStringArray("4.2", "GL Compatibility")
+config/icon="res://icon.svg"
+
+[debug]
+
+gdscript/warnings/shadowed_global_identifier=2
+gdscript/warnings/incompatible_ternary=2
+gdscript/warnings/untyped_declaration=2
+gdscript/warnings/inferred_declaration=2
+gdscript/warnings/unsafe_property_access=2
+gdscript/warnings/unsafe_method_access=2
+gdscript/warnings/unsafe_cast=2
+gdscript/warnings/unsafe_call_argument=2
+gdscript/warnings/unsafe_void_return=2
+gdscript/warnings/return_value_discarded=1
+gdscript/warnings/static_called_on_instance=2
+gdscript/warnings/confusable_identifier=2
+gdscript/warnings/confusable_local_declaration=2
+gdscript/warnings/confusable_local_usage=2
+gdscript/warnings/directory_rules={}
+gdscript/warnings/confusable_capture_reassignment=2
+gdscript/completion/autocomplete_setters_and_getters=true
+gdscript/warnings/unused_class_variable=true
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/rubonnek.subtitles_importer/plugin.cfg")
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"

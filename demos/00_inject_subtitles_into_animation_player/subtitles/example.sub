@@ -1,0 +1,7 @@
+﻿{1}{1}29.970030
+{0}{74}Welcome to Subtitle Importer!
+{90}{179}This is a sample subtitle file|demonstrating the import functionality for this filetype.
+{195}{269}HTML tags are automatically removed.|Leftover SSA/ASS tags  are removed automatically by default.
+{300}{404}The importer will parse timestamps|and preserve multi-line text.
+{420}{509}Perfect for cutscenes, tutorials,|and accessibility features!
+{660}{764}Thanks for using the Subtitle Importer plugin!

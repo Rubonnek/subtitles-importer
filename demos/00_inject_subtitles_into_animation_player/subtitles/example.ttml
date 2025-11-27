@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tt xml:lang="en" xmlns="http://www.w3.org/ns/ttml" xmlns:tts="http://www.w3.org/ns/ttml#styling">
+ <head>
+  <styling>
+   <style tts:color="white" tts:fontFamily="monospace" tts:fontSize="1c" xml:id="default"/>
+  </styling>
+  <layout>
+   <region tts:displayAlign="after" tts:textAlign="start" xml:id="bottom"/>
+  </layout>
+ </head>
+ <body>
+  <div region="bottom" xml:lang="en-US">
+   <p begin="00:00:00.000" end="00:00:02.500" region="bottom" style="default">
+    Welcome to Subtitle Importer!
+   </p>
+   <p begin="00:00:03.000" end="00:00:06.000" region="bottom" style="default">
+    This is a sample subtitle file<br/>
+    demonstrating the import functionality for this filetype.
+   </p>
+   <p begin="00:00:06.500" end="00:00:09.000" region="bottom" style="default">
+    &lt;b&gt;HTML &lt;i&gt;tags&lt;/i&gt; are automatically removed&lt;/b&gt;.<br/>
+    Leftover SSA/ASS tags  are removed automatically by default.
+   </p>
+   <p begin="00:00:10.000" end="00:00:13.500" region="bottom" style="default">
+    The importer will parse timestamps<br/>
+    and preserve multi-line text.
+   </p>
+   <p begin="00:00:14.000" end="00:00:17.000" region="bottom" style="default">
+    Perfect for cutscenes, tutorials,<br/>
+    and accessibility features!
+   </p>
+   <p begin="00:00:22.000" end="00:00:25.500" region="bottom" style="default">
+    Thanks for using the Subtitle Importer plugin!
+   </p>
+  </div>
+ </body>
+</tt>

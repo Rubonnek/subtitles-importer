@@ -1,0 +1,10 @@
+﻿1 00;00;00;00 00;00;02;14 Welcome to Subtitle Importer!
+2 00;00;02;29 00;00;05;29 This is a sample subtitle file
+demonstrating the import functionality for this filetype.
+3 00;00;06;14 00;00;08;29 HTML tags are automatically removed.
+Leftover SSA/ASS tags  are removed automatically by default.
+4 00;00;09;29 00;00;13;14 The importer will parse timestamps
+and preserve multi-line text.
+5 00;00;13;29 00;00;16;29 Perfect for cutscenes, tutorials,
+and accessibility features!
+6 00;00;21;29 00;00;25;14 Thanks for using the Subtitle Importer plugin!

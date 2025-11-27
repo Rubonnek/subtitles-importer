@@ -1,0 +1,17 @@
+[remap]
+
+importer="rubonnek.subtitle_importer"
+type="Resource"
+uid="uid://umyu68vyop2j"
+path="res://.godot/imported/example.dfxp-cc2df643c97d826ab481b1fb4f547ea6.res"
+
+[deps]
+
+source_file="res://demos/00_inject_subtitles_into_animation_player/subtitles/example.dfxp"
+dest_files=["res://.godot/imported/example.dfxp-cc2df643c97d826ab481b1fb4f547ea6.res"]
+
+[params]
+
+remove_html_tags=true
+remove_ass_tags=true
+framerate=25.0

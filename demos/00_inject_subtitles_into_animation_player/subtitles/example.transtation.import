@@ -1,0 +1,17 @@
+[remap]
+
+importer="rubonnek.subtitle_importer"
+type="Resource"
+uid="uid://ojrpa1kmakl"
+path="res://.godot/imported/example.transtation-53ca2b6bac9692ca7b8dd973f6071e0d.res"
+
+[deps]
+
+source_file="res://demos/00_inject_subtitles_into_animation_player/subtitles/example.transtation"
+dest_files=["res://.godot/imported/example.transtation-53ca2b6bac9692ca7b8dd973f6071e0d.res"]
+
+[params]
+
+remove_html_tags=true
+remove_ass_tags=true
+framerate=25.0

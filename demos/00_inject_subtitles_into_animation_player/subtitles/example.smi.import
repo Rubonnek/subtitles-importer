@@ -1,0 +1,17 @@
+[remap]
+
+importer="rubonnek.subtitle_importer"
+type="Resource"
+uid="uid://bn83pl3q0dh5k"
+path="res://.godot/imported/example.smi-2491819caba70baf48ac86bc8b740dbf.res"
+
+[deps]
+
+source_file="res://demos/00_inject_subtitles_into_animation_player/subtitles/example.smi"
+dest_files=["res://.godot/imported/example.smi-2491819caba70baf48ac86bc8b740dbf.res"]
+
+[params]
+
+remove_html_tags=true
+remove_ass_tags=true
+framerate=25.0

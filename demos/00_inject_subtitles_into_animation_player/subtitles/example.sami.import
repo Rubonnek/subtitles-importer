@@ -1,0 +1,17 @@
+[remap]
+
+importer="rubonnek.subtitle_importer"
+type="Resource"
+uid="uid://cpcb6cgej68ce"
+path="res://.godot/imported/example.sami-91d6e243c52841a9b37b5e050f45597e.res"
+
+[deps]
+
+source_file="res://demos/00_inject_subtitles_into_animation_player/subtitles/example.sami"
+dest_files=["res://.godot/imported/example.sami-91d6e243c52841a9b37b5e050f45597e.res"]
+
+[params]
+
+remove_html_tags=true
+remove_ass_tags=true
+framerate=25.0

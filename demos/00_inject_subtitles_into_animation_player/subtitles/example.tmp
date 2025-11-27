@@ -1,0 +1,6 @@
+00:00:00:Welcome to Subtitle Importer!
+00:00:03:This is a sample subtitle file|demonstrating the import functionality for this filetype.
+00:00:06:{\b1}HTML {\i1}tags{\i0} are automatically removed{\b0}.|Leftover SSA/ASS tags  are removed automatically by default.
+00:00:10:The importer will parse timestamps|and preserve multi-line text.
+00:00:14:Perfect for cutscenes, tutorials,|and accessibility features!
+00:00:22:Thanks for using the Subtitle Importer plugin!

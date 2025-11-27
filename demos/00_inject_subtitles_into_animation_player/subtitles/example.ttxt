@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TextStream version="1.1">
+  <TextStreamHeader width="400" height="60" layer="0" translation_x="0" translation_y="0">
+    <TextSampleDescription horizontalJustification="center" verticalJustification="bottom" backColor="0 0 0 0" verticalText="no" fillTextRegion="no" continuousKaraoke="no" scroll="None">
+      <FontTable>
+        <FontTableEntry fontName="Sans" fontID="1"/>
+      </FontTable>
+      <TextBox top="0" left="0" bottom="60" right="400"/>
+      <Style styles="Normal" fontID="1" fontSize="18" color="ff ff ff ff"/>
+    </TextSampleDescription>
+  </TextStreamHeader>
+  <TextSample sampleTime="00:00:00.000" xml:space="preserve">Welcome to Subtitle Importer!</TextSample>
+  <TextSample sampleTime="00:00:02.500" xml:space="preserve"></TextSample>
+  <TextSample sampleTime="00:00:03.000" xml:space="preserve">This is a sample subtitle file&#xD;
+demonstrating the import functionality for this filetype.</TextSample>
+  <TextSample sampleTime="00:00:06.000" xml:space="preserve"></TextSample>
+  <TextSample sampleTime="00:00:06.500" xml:space="preserve">HTML tags are automatically removed.&#xD;
+Leftover SSA/ASS tags  are removed automatically by default.</TextSample>
+  <TextSample sampleTime="00:00:09.000" xml:space="preserve"></TextSample>
+  <TextSample sampleTime="00:00:10.000" xml:space="preserve">The importer will parse timestamps&#xD;
+and preserve multi-line text.</TextSample>
+  <TextSample sampleTime="00:00:13.500" xml:space="preserve"></TextSample>
+  <TextSample sampleTime="00:00:14.000" xml:space="preserve">Perfect for cutscenes, tutorials,&#xD;
+and accessibility features!</TextSample>
+  <TextSample sampleTime="00:00:17.000" xml:space="preserve"></TextSample>
+  <TextSample sampleTime="00:00:22.000" xml:space="preserve">Thanks for using the Subtitle Importer plugin!</TextSample>
+  <TextSample sampleTime="00:00:25.500" xml:space="preserve"></TextSample>
+</TextStream>

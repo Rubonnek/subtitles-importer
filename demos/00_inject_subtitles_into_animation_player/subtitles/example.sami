@@ -1,0 +1,72 @@
+<sami>
+ <head>
+  <style type="text/css">
+   <!--
+    .en-US {
+     lang: en-US;
+    }
+   -->
+  </style>
+ </head>
+ <body>
+  <sync start="0">
+   <p class="en-US">
+    Welcome to Subtitle Importer!
+   </p>
+  </sync>
+  <sync start="2500">
+   <p class="en-US">
+    &nbsp;
+   </p>
+  </sync>
+  <sync start="3000">
+   <p class="en-US">
+    This is a sample subtitle file<br/>
+    demonstrating the import functionality for this filetype.
+   </p>
+  </sync>
+  <sync start="6000">
+   <p class="en-US">
+    &nbsp;
+   </p>
+  </sync>
+  <sync start="6500">
+   <p class="en-US">
+    &lt;b&gt;HTML &lt;i&gt;tags&lt;/i&gt; are automatically removed&lt;/b&gt;.<br/>
+    Leftover SSA/ASS tags  are removed automatically by default.
+   </p>
+  </sync>
+  <sync start="9000">
+   <p class="en-US">
+    &nbsp;
+   </p>
+  </sync>
+  <sync start="10000">
+   <p class="en-US">
+    The importer will parse timestamps<br/>
+    and preserve multi-line text.
+   </p>
+  </sync>
+  <sync start="13500">
+   <p class="en-US">
+    &nbsp;
+   </p>
+  </sync>
+  <sync start="14000">
+   <p class="en-US">
+    Perfect for cutscenes, tutorials,<br/>
+    and accessibility features!
+   </p>
+  </sync>
+  <sync start="17000">
+   <p class="en-US">
+    &nbsp;
+   </p>
+  </sync>
+  <sync start="22000">
+   <p class="en-US">
+    Thanks for using the Subtitle Importer plugin!
+   </p>
+  </sync>
+ </body>
+</sami>

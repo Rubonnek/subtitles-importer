@@ -1,0 +1,17 @@
+[remap]
+
+importer="rubonnek.subtitle_importer"
+type="Resource"
+uid="uid://ih4t3wqhf6eu"
+path="res://.godot/imported/example.mpl-31440f471ec5f851c5d3604968292adc.res"
+
+[deps]
+
+source_file="res://demos/00_inject_subtitles_into_animation_player/subtitles/example.mpl"
+dest_files=["res://.godot/imported/example.mpl-31440f471ec5f851c5d3604968292adc.res"]
+
+[params]
+
+remove_html_tags=true
+remove_ass_tags=true
+framerate=25.0
