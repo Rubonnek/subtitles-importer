@@ -1976,7 +1976,7 @@ func __decode_ebu_stl_text_field(p_bytes: PackedByteArray, _p_cct: int) -> Strin
 			# Copy the entire UTF-8 sequence
 			for j: int in range(seq_len):
 				if i + j < byte_count:
-					cleaned_bytes.append(p_bytes[i + j])
+					var _ignore: bool = cleaned_bytes.append(p_bytes[i + j])
 			i += seq_len
 			continue
 
@@ -1987,7 +1987,7 @@ func __decode_ebu_stl_text_field(p_bytes: PackedByteArray, _p_cct: int) -> Strin
 			continue
 		elif byte == 0x0A:
 			# Line feed (LF) - treat as line break
-			cleaned_bytes.append(0x0A)
+			var _ignore: bool = cleaned_bytes.append(0x0A)
 			i += 1
 		elif byte == 0x0B:
 			# Vertical tab - skip
@@ -1999,7 +1999,7 @@ func __decode_ebu_stl_text_field(p_bytes: PackedByteArray, _p_cct: int) -> Strin
 			continue
 		elif byte == 0x8A:
 			# EBU-STL line break - convert to newline
-			cleaned_bytes.append(0x0A)
+			var _ignore: bool = cleaned_bytes.append(0x0A)
 			i += 1
 		elif byte == 0x8F:
 			# End of text field
@@ -2011,11 +2011,11 @@ func __decode_ebu_stl_text_field(p_bytes: PackedByteArray, _p_cct: int) -> Strin
 			continue
 		elif byte >= 0x20 and byte <= 0x7F:
 			# Standard ASCII characters
-			cleaned_bytes.append(byte)
+			var _ignore: bool = cleaned_bytes.append(byte)
 			i += 1
 		elif byte >= 0xA0:
 			# Extended single-byte character (Latin-1 supplement)
-			cleaned_bytes.append(byte)
+			var _ignore: bool = cleaned_bytes.append(byte)
 			i += 1
 		else:
 			# Other characters < 0x20 (control characters), skip
@@ -2106,7 +2106,6 @@ func __parse_ttxt(p_content: String, p_file_path: String = "", p_remove_html_tag
 ## Parses a single TTXT TextSample element with timing attributes.
 func __parse_ttxt_textsample_element(p_parser: XMLParser, p_timescale: float, p_remove_html_tags: bool = true, p_remove_ass_tags: bool = true) -> Dictionary:
 	var sampleTime_attr: String = ""
-	var duration_attr: String = ""
 	var text_attr: String = ""
 
 	# Check for timing attributes
@@ -2114,9 +2113,6 @@ func __parse_ttxt_textsample_element(p_parser: XMLParser, p_timescale: float, p_
 		sampleTime_attr = p_parser.get_named_attribute_value("sampleTime")
 	elif p_parser.has_attribute("sampletime"):
 		sampleTime_attr = p_parser.get_named_attribute_value("sampletime")
-
-	if p_parser.has_attribute("duration"):
-		duration_attr = p_parser.get_named_attribute_value("duration")
 
 	# Check for text attribute (sometimes the text is in an attribute)
 	if p_parser.has_attribute("text"):
@@ -2600,7 +2596,7 @@ func __parse_transtation(p_content: String, p_framerate: float = 30.0, p_file_pa
 				i += 1
 				break
 
-			text_lines.append(text_line)
+			var _ignore: bool = text_lines.append(text_line)
 			i += 1
 
 		var text: String = "\n".join(text_lines).strip_edges()
