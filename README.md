@@ -41,8 +41,8 @@ A comprehensive subtitles importer plugin for the Godot Game Engine.
 
 Inject the subtitles into an animation player in three easy steps:
 
-1. In the scene tree, hold `Control` on your keyboard to select both an AnimationPlayer and Label (or RichTextLabel).
-2. In the FileSystem stab, select one subtitle file in any of the supported formats.
+1. In the scene tree, hold `Control` on your keyboard to select both an AnimationPlayer and a Label (or RichTextLabel).
+2. In the FileSystem tab, select one subtitle file in any of the supported formats.
 3. Finally click `Project -> Tools -> Inject Subtitles into AnimationPlayer`, select the `subtitles` animation in the selected AnimationPlayer and click the auto-play button and done!
 
 ## :package: Installation
