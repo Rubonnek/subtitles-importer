@@ -150,72 +150,31 @@ func _on_inject_subtitles() -> void:
 
 
 func _create_subtitle_animation(p_subtitles: Subtitles, p_label_node: Control, p_animation_player: AnimationPlayer) -> bool:
-	if p_subtitles.get_entry_count() == 0:
-		printerr("ERROR: Subtitles has no entries!")
-		_show_error("Subtitles has no entries!\n\nThe selected subtitle file is empty.")
-		return false
+	# Use Subtitles.inject_animation() to inject the animation
+	var result: Error = p_subtitles.inject_animation(ANIMATION_NAME, p_animation_player, p_label_node)
 
-	# Create or get animation
-	var animation: Animation
-	if p_animation_player.has_animation(ANIMATION_NAME):
-		print("Animation '", ANIMATION_NAME, "' already exists. Overwriting...")
-		animation = p_animation_player.get_animation(ANIMATION_NAME)
-		# Clear all tracks
-		while animation.get_track_count() > 0:
-			animation.remove_track(0)
-	else:
-		animation = Animation.new()
-		var library: AnimationLibrary = null
-		if p_animation_player.has_animation_library(""):
-			library = p_animation_player.get_animation_library("")
-		if library == null:
-			library = AnimationLibrary.new()
-			var _err1: Error = p_animation_player.add_animation_library("", library)
-		var _err2: Error = library.add_animation(ANIMATION_NAME, animation)
-
-	# Set animation length to the total duration of subtitles
-	var total_duration: float = p_subtitles.get_total_duration()
-	animation.length = total_duration
-
-	# Get the node path from AnimationPlayer to Label
-	var node_path: NodePath = p_animation_player.get_node(p_animation_player.get_root_node()).get_path_to(p_label_node)
-
-	# Create text track
-	var text_track_idx: int = _create_text_track(animation, node_path, p_subtitles)
-
-	if text_track_idx < 0:
-		printerr("ERROR: Failed to create text track!")
+	if result != OK:
+		var error_message: String = "Failed to inject subtitle animation.\n\n"
+		match result:
+			ERR_INVALID_DATA:
+				error_message += "The subtitle file has no entries."
+			ERR_INVALID_PARAMETER:
+				error_message += "Invalid parameters provided (check AnimationPlayer and Label nodes)."
+			ERR_CANT_CREATE:
+				error_message += "Failed to create animation from subtitle data."
+			_:
+				error_message += "Unknown error occurred."
+		error_message += "\n\nPlease check the Output console for details."
+		_show_error(error_message)
 		return false
 
 	print("Created track:")
-	print("  - Text track (", text_track_idx, ") with ", p_subtitles.get_entry_count(), " keyframes")
+	print("  - Text track with ", p_subtitles.get_entry_count(), " keyframes")
 
 	return true
 
 
-func _create_text_track(p_animation: Animation, p_node_path: NodePath, p_subtitles: Subtitles) -> int:
-	var track_idx: int = p_animation.add_track(Animation.TYPE_VALUE)
-	p_animation.track_set_path(track_idx, String(p_node_path) + ":text")
-	p_animation.track_set_interpolation_type(track_idx, Animation.INTERPOLATION_NEAREST)
 
-	# Check if first subtitle starts at 0.0, if not add empty key at 0.0
-	var first_start_time: float = p_subtitles.get_entry_start_time(0) if p_subtitles.get_entry_count() > 0 else 0.0
-	if first_start_time > 0.0:
-		var _key0: int = p_animation.track_insert_key(track_idx, 0.0, "")
-
-	# Add keyframes for each subtitle entry using optimized accessors
-	for i: int in range(p_subtitles.get_entry_count()):
-		var start_time: float = p_subtitles.get_entry_start_time(i)
-		var end_time: float = p_subtitles.get_entry_end_time(i)
-		var text: String = p_subtitles.get_entry_text(i)
-
-		# Set text at start time
-		var _key1: int = p_animation.track_insert_key(track_idx, start_time, text)
-
-		# Clear text at end time
-		var _key2: int = p_animation.track_insert_key(track_idx, end_time, "")
-
-	return track_idx
 
 
 func _show_success(p_message: String) -> void:

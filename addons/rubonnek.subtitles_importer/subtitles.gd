@@ -114,7 +114,7 @@ func get_subtitle_at_time(p_time: float) -> String:
 ## Returns the entry index (ID) of the subtitle that should be displayed at the given time.
 ## Returns -1 if no subtitle is active at that time.
 func get_entry_id_at_time(p_time: float) -> int:
-	for i: int in range(_entries.size()):
+	for i: int in _entries.size():
 		var entry_dict: Dictionary = _entries[i]
 		var start: float = entry_dict.get(SubtitleEntry._key.START_TIME, 0.0)
 		var end: float = entry_dict.get(SubtitleEntry._key.END_TIME, 0.0)
@@ -168,6 +168,127 @@ func set_entries(p_entries: Array[Dictionary]) -> void:
 ## Clears all subtitle entries from this resource.
 func clear_entries() -> void:
 	_entries.clear()
+
+
+## Creates an Animation from the subtitle data for use with AnimationPlayer.
+## Returns the created Animation, or null if the subtitles have no entries.
+## The caller must set the animation's resource_name and track path as needed.
+func create_animation() -> Animation:
+	if get_entry_count() == 0:
+		printerr("ERROR: Subtitles has no entries!")
+		return null
+
+	# Create new animation
+	var animation: Animation = Animation.new()
+
+	# Set animation length to the total duration of subtitles
+	var total_duration: float = get_total_duration()
+	animation.set_length(total_duration)
+
+	# Create text track (path will be set by caller)
+	var track_idx: int = animation.add_track(Animation.TYPE_VALUE)
+	animation.track_set_interpolation_type(track_idx, Animation.INTERPOLATION_NEAREST)
+	animation.value_track_set_update_mode(track_idx, Animation.UPDATE_DISCRETE)
+
+	# Check if first subtitle starts at 0.0, if not add empty key at 0.0
+	var first_start_time: float = get_entry_start_time(0) if get_entry_count() > 0 else 0.0
+	if first_start_time > 0.0:
+		var _key0: int = animation.track_insert_key(track_idx, 0.0, "")
+
+	# Add keyframes for each subtitle entry using optimized accessors
+	for i: int in get_entry_count():
+		var start_time: float = get_entry_start_time(i)
+		var end_time: float = get_entry_end_time(i)
+		var text: String = get_entry_text(i)
+
+		# Set text at start time
+		var _key1: int = animation.track_insert_key(track_idx, start_time, text)
+
+		# Clear text at end time
+		var _key2: int = animation.track_insert_key(track_idx, end_time, "")
+
+	return animation
+
+
+## Injects a subtitle animation into an AnimationPlayer.
+## Returns OK on success, or an appropriate Error code on failure.
+##
+## @param p_animation_name: The name for the animation in the AnimationPlayer.
+## @param p_animation_player: The AnimationPlayer node to inject the animation into.
+## @param p_label: The Label or RichTextLabel node that will display the subtitles.
+func inject_animation(p_animation_name: String, p_animation_player: AnimationPlayer, p_label: Control) -> Error:
+	if get_entry_count() == 0:
+		printerr("ERROR: Subtitles has no entries!")
+		return ERR_INVALID_DATA
+
+	if p_animation_player == null:
+		printerr("ERROR: AnimationPlayer is null!")
+		return ERR_INVALID_PARAMETER
+
+	if p_label == null:
+		printerr("ERROR: Label node is null!")
+		return ERR_INVALID_PARAMETER
+
+	if not (p_label is Label or p_label is RichTextLabel):
+		printerr("ERROR: Label node must be Label or RichTextLabel!")
+		return ERR_INVALID_PARAMETER
+
+	# Get the node path from AnimationPlayer to Label
+	var node_path: NodePath = p_animation_player.get_node(p_animation_player.get_root_node()).get_path_to(p_label)
+	var text_property_path: String = str(node_path) + ":text"
+
+	# Create the animation
+	var new_animation: Animation = create_animation()
+
+	if new_animation == null:
+		printerr("ERROR: Failed to create animation from subtitles!")
+		return ERR_CANT_CREATE
+
+	# Set the track path for the text property
+	if new_animation.get_track_count() > 0:
+		new_animation.track_set_path(0, text_property_path)
+
+	# Handle existing animation
+	var animation: Animation
+	if p_animation_player.has_animation(p_animation_name):
+		animation = p_animation_player.get_animation(p_animation_name)
+
+		# Only remove the track for the specific label node
+		for i: int in range(animation.get_track_count() - 1, -1, -1):
+			if str(animation.track_get_path(i)) == text_property_path:
+				animation.remove_track(i)
+
+		# Copy the new animation data into the existing animation
+		animation.set_length(new_animation.get_length())
+		for i: int in new_animation.get_track_count():
+			var track_idx: int = animation.add_track(new_animation.track_get_type(i))
+			animation.track_set_path(track_idx, new_animation.track_get_path(i))
+			animation.track_set_interpolation_type(track_idx, new_animation.track_get_interpolation_type(i))
+			animation.value_track_set_update_mode(track_idx, new_animation.value_track_get_update_mode(i))
+
+			# Copy all keys from the new track
+			for key_idx: int in new_animation.track_get_key_count(i):
+				var key_time: float = new_animation.track_get_key_time(i, key_idx)
+				var key_value: Variant = new_animation.track_get_key_value(i, key_idx)
+				animation.track_insert_key(track_idx, key_time, key_value)
+	else:
+		# Add the new animation to the AnimationPlayer
+		animation = new_animation
+		var library: AnimationLibrary = null
+		if p_animation_player.has_animation_library(""):
+			library = p_animation_player.get_animation_library("")
+		if library == null:
+			library = AnimationLibrary.new()
+			var err: Error = p_animation_player.add_animation_library("", library)
+			if err != OK:
+				printerr("ERROR: Failed to add animation library: ", err)
+				return err
+		var err: Error = library.add_animation(p_animation_name, animation)
+		if err != OK:
+			printerr("ERROR: Failed to add animation '", p_animation_name, "': ", err)
+			return err
+
+	return OK
 
 
 ## Returns the start time of an entry at the given index.
@@ -522,7 +643,7 @@ func __parse_srt(p_content: String, p_file_path: String = "", p_remove_html_tags
 	var blocks: PackedStringArray = __normalize_line_endings(p_content).split("\n\n")
 
 	var block_count: int = blocks.size()
-	for block_idx: int in range(block_count):
+	for block_idx: int in block_count:
 		var block: String = blocks[block_idx].strip_edges()
 		var block_len: int = block.length()
 		if block_len == 0:
@@ -753,7 +874,7 @@ func __parse_lrc(p_content: String, p_file_path: String = "", p_remove_html_tags
 		var _compile_error: Error = _lrc_timestamp_regex.compile("\\[(\\d+):(\\d+\\.\\d+)\\]")
 
 	var line_count: int = lines.size()
-	for line_idx: int in range(line_count):
+	for line_idx: int in line_count:
 		var line: String = lines[line_idx].strip_edges()
 		var line_len: int = line.length()
 
@@ -792,7 +913,7 @@ func __parse_lrc(p_content: String, p_file_path: String = "", p_remove_html_tags
 			text = __remove_ass_tags(text)
 
 		# Process each timestamp in the line (LRC supports multiple timestamps per line)
-		for match_idx: int in range(match_count):
+		for match_idx: int in match_count:
 			var match: RegExMatch = matches[match_idx]
 			var minutes: int = match.get_string(1).to_int()
 			var seconds: float = match.get_string(2).to_float()
@@ -811,7 +932,7 @@ func __parse_lrc(p_content: String, p_file_path: String = "", p_remove_html_tags
 
 	# Calculate end times based on next entry's start time
 	var temp_count: int = temp_entries.size()
-	for i: int in range(temp_count):
+	for i: int in temp_count:
 		var entry: Dictionary = temp_entries[i]
 
 		if i < temp_count - 1:
@@ -841,7 +962,7 @@ func __parse_ssa(p_content: String, p_file_path: String = "", p_remove_html_tags
 	var dialogue_format: Array[String] = []
 
 	var line_count: int = lines.size()
-	for i: int in range(line_count):
+	for i: int in line_count:
 		var line: String = lines[i].strip_edges()
 
 		if line.is_empty() or line[0] == ';':
@@ -861,7 +982,7 @@ func __parse_ssa(p_content: String, p_file_path: String = "", p_remove_html_tags
 			var fields: PackedStringArray = format_part.split(",")
 			dialogue_format.clear()
 			var _resize_error: int = dialogue_format.resize(fields.size())
-			for idx: int in range(fields.size()):
+			for idx: int in fields.size():
 				dialogue_format[idx] = fields[idx].strip_edges().to_lower()
 			continue
 
@@ -902,7 +1023,7 @@ func __parse_ssa_dialogue_line(p_line: String, p_format: Array[String], p_remove
 	var line_len: int = p_line.length()
 
 	# Find comma positions up to text_index
-	for i: int in range(line_len):
+	for i: int in line_len:
 		if p_line[i] == ',' and part_count < text_index:
 			parts[part_count] = p_line.substr(start_pos, i - start_pos)
 			part_count += 1
@@ -924,7 +1045,7 @@ func __parse_ssa_dialogue_line(p_line: String, p_format: Array[String], p_remove
 	var field_values: Dictionary = {}
 	var format_size: int = p_format.size()
 	var min_size: int = mini(part_count, format_size)
-	for i: int in range(min_size):
+	for i: int in min_size:
 		field_values[p_format[i]] = parts[i].strip_edges()
 
 	# Extract required fields (optimized with direct access)
@@ -1009,7 +1130,7 @@ func __parse_sbv(p_content: String, p_file_path: String = "", p_remove_html_tags
 	var blocks: PackedStringArray = __normalize_line_endings(p_content).split("\n\n")
 
 	var block_count: int = blocks.size()
-	for block_idx: int in range(block_count):
+	for block_idx: int in block_count:
 		var block: String = blocks[block_idx].strip_edges()
 		var block_len: int = block.length()
 		if block_len == 0:
@@ -1350,7 +1471,7 @@ func __parse_scc(p_content: String, p_framerate: float = 29.97, p_file_path: Str
 	var framerate: float = p_framerate if p_framerate > 0.0 else 29.97  # Default NTSC framerate
 
 	var line_count: int = lines.size()
-	for line_idx: int in range(line_count):
+	for line_idx: int in line_count:
 		var line: String = lines[line_idx].strip_edges()
 		var line_len: int = line.length()
 
@@ -1401,7 +1522,7 @@ func __parse_scc(p_content: String, p_framerate: float = 29.97, p_file_path: Str
 
 	# Post-process: set end times based on next entry's start time
 	var entry_count: int = entries.size()
-	for i: int in range(entry_count - 1):
+	for i: int in entry_count - 1:
 		var next_start: float = entries[i + 1][SubtitleEntry._key.START_TIME]
 		# Only update if next entry starts after current
 		if next_start > entries[i][SubtitleEntry._key.START_TIME]:
@@ -1469,7 +1590,7 @@ func __decode_scc_data(p_data: String) -> String:
 	var hex_count: int = hex_codes.size()
 	var last_was_control: bool = false
 
-	for hex_idx: int in range(hex_count):
+	for hex_idx: int in hex_count:
 		var hex_str: String = hex_codes[hex_idx]
 		if hex_str.length() != 4:
 			continue
@@ -1534,7 +1655,7 @@ func __parse_sub(p_content: String, p_framerate: float = 25.0, p_file_path: Stri
 	var detected_framerate: float = p_framerate
 
 	var line_count: int = lines.size()
-	for line_idx: int in range(line_count):
+	for line_idx: int in line_count:
 		var line: String = lines[line_idx].strip_edges()
 		var line_len: int = line.length()
 
@@ -1665,7 +1786,7 @@ func __parse_smi(p_content: String, p_file_path: String = "", p_remove_html_tags
 		return entries
 
 	# Process each SYNC tag
-	for i: int in range(match_count):
+	for i: int in match_count:
 		var match: RegExMatch = matches[i]
 		var start_ms: String = match.get_string(1)
 		var content_block: String = match.get_string(2)
@@ -1974,7 +2095,7 @@ func __decode_ebu_stl_text_field(p_bytes: PackedByteArray, _p_cct: int) -> Strin
 				seq_len = 2  # 2-byte sequence
 
 			# Copy the entire UTF-8 sequence
-			for j: int in range(seq_len):
+			for j: int in seq_len:
 				if i + j < byte_count:
 					var _ignore: bool = cleaned_bytes.append(p_bytes[i + j])
 			i += seq_len
@@ -2241,7 +2362,7 @@ func __parse_mpl2(p_content: String, p_framerate: float, p_file_path: String = "
 
 	# Parse each line of MPL2 subtitle format
 	var line_count: int = lines.size()
-	for line_idx: int in range(line_count):
+	for line_idx: int in line_count:
 		var line: String = lines[line_idx]
 		var trimmed: String = line.strip_edges()
 		if trimmed.is_empty():
@@ -2326,7 +2447,7 @@ func __parse_tmp(p_content: String, p_file_path: String = "", p_remove_html_tags
 
 	# Parse each line of TMP subtitle format
 	var line_count: int = lines.size()
-	for line_idx: int in range(line_count):
+	for line_idx: int in line_count:
 		var line: String = lines[line_idx]
 		var trimmed: String = line.strip_edges()
 		if trimmed.is_empty():
@@ -2341,7 +2462,7 @@ func __parse_tmp(p_content: String, p_file_path: String = "", p_remove_html_tags
 
 		# Check for colons in the first part of the line
 		var check_length: int = min(10, trimmed.length())
-		for i: int in range(check_length):
+		for i: int in check_length:
 			if trimmed[i] == ":":
 				colon_count += 1
 				if first_colon < 0:
@@ -2403,7 +2524,7 @@ func __parse_tmp(p_content: String, p_file_path: String = "", p_remove_html_tags
 	# Calculate end times based on next subtitle or default duration
 	var temp_count: int = temp_entries.size()
 	# Process each temporary entry to set end times
-	for i: int in range(temp_count):
+	for i: int in temp_count:
 		var entry: Dictionary = temp_entries[i]
 		var start_time: float = entry["start"]
 		var end_time: float
@@ -2709,7 +2830,7 @@ func __check_overlapping_intervals(p_entries: Array[Dictionary], p_parser_name: 
 	var warning_count: int = 0
 
 	# Optimized O(n) algorithm - only check consecutive and nearby entries
-	for i: int in range(entry_count - 1):
+	for i: int in entry_count - 1:
 		var current: Dictionary = p_entries[i]
 		var current_end: float = current[SubtitleEntry._key.END_TIME]
 
@@ -2750,7 +2871,6 @@ func __check_overlapping_intervals(p_entries: Array[Dictionary], p_parser_name: 
 			push_warning("%s (%s): Total overlapping subtitle pairs: %d. Linear dialogue format may not support this properly." % [p_parser_name, p_file_path, overlap_count])
 		else:
 			push_warning("%s: Total overlapping subtitle pairs: %d. Linear dialogue format may not support this properly." % [p_parser_name, overlap_count])
-
 
 
 
