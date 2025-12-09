@@ -1013,7 +1013,7 @@ func __parse_lrc(p_content: String, p_file_path: String = "", p_remove_html_tags
 	# Initialize cached regex on first use
 	if _lrc_timestamp_regex == null:
 		_lrc_timestamp_regex = RegEx.new()
-		var _compile_error: Error = _lrc_timestamp_regex.compile("\\[(\\d+):(\\d+\\.\\d+)\\]")
+		var _compile_error: Error = _lrc_timestamp_regex.compile("\\[(\\d+):(\\d+(?:\\.\\d+)?)\\]")
 
 	var line_count: int = lines.size()
 	for line_idx: int in line_count:
@@ -1058,7 +1058,15 @@ func __parse_lrc(p_content: String, p_file_path: String = "", p_remove_html_tags
 		for match_idx: int in match_count:
 			var match: RegExMatch = matches[match_idx]
 			var minutes: int = match.get_string(1).to_int()
-			var seconds: float = match.get_string(2).to_float()
+			var seconds_str: String = match.get_string(2)
+			var dot_pos: int = seconds_str.find(".")
+			var seconds: float = 0.0
+			if dot_pos >= 0:
+				var whole_seconds: float = seconds_str.substr(0, dot_pos).to_float()
+				var fractional: float = seconds_str.substr(dot_pos + 1).to_float() * 0.001
+				seconds = whole_seconds + fractional
+			else:
+				seconds = seconds_str.to_float()
 			var timestamp: float = float(minutes) * 60.0 + seconds
 
 			temp_entries.append({
