@@ -645,7 +645,7 @@ func parse_ttxt(p_content: String, p_remove_html_tags: bool = true, p_remove_ass
 ## Parses MPL2 (MPSub) content at runtime and populates this Subtitles resource.
 ## Returns OK on success, or an error code on failure.
 func parse_mpl2(p_content: String, p_framerate: float = 25.0, p_remove_html_tags: bool = true, p_remove_ass_tags: bool = true) -> Error:
-	var parsed_entries: Array[Dictionary] = __parse_mpl2(p_content, p_framerate, "", p_remove_html_tags, p_remove_ass_tags)
+	var parsed_entries: Array[Dictionary] = __parse_mpl2(p_content, "", p_remove_html_tags, p_remove_ass_tags)
 
 	if parsed_entries.is_empty():
 		return ERR_PARSE_ERROR
@@ -728,7 +728,7 @@ func parse_from_string(p_content: String, p_extension: String, p_framerate: floa
 		"ttxt":
 			entries = __parse_ttxt(p_content, p_file_path, p_remove_html_tags, p_remove_ass_tags)
 		"mpl":
-			entries = __parse_mpl2(p_content, p_framerate, p_file_path, p_remove_html_tags, p_remove_ass_tags)
+			entries = __parse_mpl2(p_content, p_file_path, p_remove_html_tags, p_remove_ass_tags)
 		"tmp":
 			entries = __parse_tmp(p_content, p_file_path, p_remove_html_tags, p_remove_ass_tags)
 		"encore":
@@ -2498,12 +2498,12 @@ func __extract_ttxt_text_content(p_parser: XMLParser) -> String:
 
 # Parses MPL2 (MPSub) subtitle format and returns an array of subtitle entry dictionaries.
 # Format: [start_deciseconds][end_deciseconds]text with | as line separator.
-func __parse_mpl2(p_content: String, p_framerate: float, p_file_path: String = "", p_remove_html_tags: bool = true, p_remove_ass_tags: bool = true) -> Array[Dictionary]:
+func __parse_mpl2(p_content: String, p_file_path: String = "", p_remove_html_tags: bool = true, p_remove_ass_tags: bool = true) -> Array[Dictionary]:
 	var entries: Array[Dictionary] = []
 	var normalized_content: String = __normalize_line_endings(p_content)
 	var lines: PackedStringArray = normalized_content.split("\n")
 
-	var frame_time: float = 1.0 / p_framerate
+	var time_unit: float = 0.1  # MPL2 timestamps are in deciseconds
 
 	# Parse each line of MPL2 subtitle format
 	var line_count: int = lines.size()
@@ -2548,8 +2548,8 @@ func __parse_mpl2(p_content: String, p_framerate: float, p_file_path: String = "
 			continue
 
 		# Convert frames to seconds
-		var start_time: float = start_frame * frame_time
-		var end_time: float = end_frame * frame_time
+		var start_time: float = start_frame * time_unit
+		var end_time: float = end_frame * time_unit
 
 		# Replace pipe characters with newlines
 		text = text.replace("|", "\n")
