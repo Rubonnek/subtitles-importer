@@ -6,7 +6,7 @@ A comprehensive subtitles importer plugin for the Godot Game Engine.
 
 ## :star: Features
 
-- :page_facing_up: **16 subtitle formats supported** including SRT, VTT, LRC, SSA/ASS, TTML/DFXP, SCC, MPL2, TMP, and more
+- :page_facing_up: **15+ subtitle formats supported** including SRT, VTT, LRC, SSA/ASS, TTML/DFXP, SCC, MPL2, TMP, and more
 - :rocket: **Runtime parsing** - load and parse subtitle files at runtime or during import
 - :art: **Easy to use** - simple API for querying subtitles by time
 - :wrench: **Editor integration** - import plugin included along with an AnimationPlayer subtitles injection tool
