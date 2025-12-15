@@ -30,20 +30,20 @@
 @tool
 extends Resource
 class_name Subtitles
-## A resource for storing and managing subtitle data from various subtitle file formats.
-##
+## A resource for storing and managing subtitle data from various subtitle file formats.[br]
+## [br]
 ## Subtitles provides functionality for importing, parsing, and querying subtitle entries
 ## with timing and text information. It supports multiple subtitle formats including SRT, VTT,
 ## LRC, SSA/ASS, and many others. The class can parse subtitle files at runtime, query subtitles
 ## by time, and inject subtitle animations into [AnimationPlayer] nodes.
 ## [br]
-## [br][b]Key Features:[/b]
-## [br]- Parse 15+ subtitle formats at runtime
-## [br]- Query subtitles by timestamp or time range
-## [br]- Create and inject animations for [AnimationPlayer]
-## [br]- Iterate through subtitle entries
-## [br]- Support for HTML and ASS tag removal
-##
+## [b]Key Features:[/b][br]
+## - Parse 15+ subtitle formats at runtime[br]
+## - Query subtitles by timestamp or time range[br]
+## - Create and inject animations for [AnimationPlayer][br]
+## - Iterate through subtitle entries[br]
+## - Support for HTML and ASS tag removal[br]
+## [br]
 ## [b]Basic Usage:[/b]
 ## [codeblock]
 ## # Create and populate subtitles
@@ -60,8 +60,8 @@ class_name Subtitles
 ## if result == OK:
 ##     print("Animation injected successfully!")
 ## [/codeblock]
-##
-## [b]Supported Formats:[/b]
+## [br]
+## [b]Supported Formats:[/b][br]
 ## [br]SRT, VTT, LRC, SSA/ASS, SBV, TTML/DFXP, SCC, SUB (MicroDVD), SMI/SAMI,
 ## [br]EBU-STL, TTXT, MPL2, TMP (TMPlayer), Adobe Encore, Transtation
 
@@ -69,7 +69,10 @@ class_name Subtitles
 # Internal array of subtitle entries stored as dictionaries with start_time, end_time, and text keys
 @export var _entries: Array[Dictionary] = []
 
-## List of supported extensions
+## Array of supported subtitle file extensions.[br]
+## [br]
+## Contains all subtitle formats that can be imported and parsed by this plugin.
+## Use this to check if a file extension is supported before attempting to load it.
 static var supported_extensions : PackedStringArray = PackedStringArray([
 		"srt",   # SubRip
 		"vtt",   # WebVTT
@@ -135,12 +138,12 @@ const OVERLAP_THRESHOLD: float = 0.05
 const MAX_OVERLAP_WARNINGS: int = 5
 
 
-## Returns the subtitle text that should be displayed at the given time.
-##
+## Returns the subtitle text that should be displayed at the given time.[br]
+## [br]
 ## Searches through all subtitle entries and returns the text of the entry
 ## that is active at the specified time. If no subtitle is active at that time,
-## returns an empty string.
-##
+## returns an empty string.[br]
+## [br]
 ## [b]Example:[/b]
 ## [codeblock]
 ## var subtitles = Subtitles.new()
@@ -157,12 +160,12 @@ func get_subtitle_at_time(p_time: float) -> String:
 	return ""
 
 
-## Returns the entry index (ID) of the subtitle active at the given time.
-##
+## Returns the entry index (ID) of the subtitle active at the given time.[br]
+## [br]
 ## Searches through all subtitle entries and returns the index of the entry
 ## that is active at the specified time. Returns [code]-1[/code] if no subtitle
-## is active at that time.
-##
+## is active at that time.[br]
+## [br]
 ## [b]Returns:[/b] The zero-based index of the active subtitle, or [code]-1[/code] if none.
 func get_entry_id_at_time(p_time: float) -> int:
 	for i: int in _entries.size():
@@ -174,12 +177,12 @@ func get_entry_id_at_time(p_time: float) -> int:
 	return -1
 
 
-## Returns all subtitle entries that overlap with the given time range.
-##
+## Returns all subtitle entries that overlap with the given time range.[br]
+## [br]
 ## Collects and returns all subtitle entries whose time ranges overlap with the
 ## specified time range [code][p_start, p_end][/code]. An entry overlaps if its start
-## time is before or at [param p_end] and its end time is after or at [param p_start].
-##
+## time is before or at [param p_end] and its end time is after or at [param p_start].[br]
+## [br]
 ## [b]Returns:[/b] An [Array] of [Dictionary] entries containing subtitle data.
 func get_subtitles_in_range(p_start: float, p_end: float) -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
@@ -191,11 +194,11 @@ func get_subtitles_in_range(p_start: float, p_end: float) -> Array[Dictionary]:
 	return result
 
 
-## Returns the total duration of all subtitles.
-##
+## Returns the total duration of all subtitles.[br]
+## [br]
 ## Returns the end time of the last subtitle entry, representing the total duration
-## of the subtitle track. Returns [code]0.0[/code] if there are no entries.
-##
+## of the subtitle track. Returns [code]0.0[/code] if there are no entries.[br]
+## [br]
 ## [b]Returns:[/b] The end time in seconds of the last subtitle entry.
 func get_total_duration() -> float:
 	if _entries.is_empty():
@@ -208,8 +211,8 @@ func get_entry_count() -> int:
 	return _entries.size()
 
 
-## Adds a new subtitle entry to this resource.
-##
+## Adds a new subtitle entry to this resource.[br]
+## [br]
 ## Creates and appends a new subtitle entry with the specified timing and text.
 ## The entry will be added to the end of the internal entries array.
 func add_entry(p_start_time: float, p_end_time: float, p_text: String) -> void:
@@ -220,39 +223,39 @@ func add_entry(p_start_time: float, p_end_time: float, p_text: String) -> void:
 	})
 
 
-## Returns a reference to the internal entries array.
-##
+## Returns a reference to the internal entries array.[br]
+## [br]
 ## [b]Warning:[/b] Modifying the returned array directly will affect the subtitle data.
 func get_entries() -> Array[Dictionary]:
 	return _entries
 
 
-## Sets the subtitle entries array.
-##
+## Sets the subtitle entries array.[br]
+## [br]
 ## Replaces the current subtitle entries with the provided array. Each entry should
 ## be a [Dictionary] containing subtitle timing and text data.
 func set_entries(p_entries: Array[Dictionary]) -> void:
 	_entries = p_entries
 
 
-## Clears all subtitle entries from this resource.
-##
-## Removes all subtitle entries, resetting the resource to an empty state.
+## Clears all subtitle entries from this resource.[br]
+## [br]
+## Removes all subtitle entries, resetting the resource to an empty state.[br]
 func clear_entries() -> void:
 	_entries.clear()
 
 
-## Creates an [Animation] from the subtitle data for use with [AnimationPlayer].
-##
+## Creates an [Animation] from the subtitle data for use with [AnimationPlayer].[br]
+## [br]
 ## Generates an animation with keyframes for each subtitle entry. The animation uses
 ## a VALUE track with DISCRETE update mode and NEAREST interpolation to ensure subtitle
-## text changes instantly at keyframes.
-##
+## text changes instantly at keyframes.[br]
+## [br]
 ## [b]Note:[/b] The caller must set the track path using [method Animation.track_set_path]
-## to target the correct label node's text property.
-##
-## [b]Returns:[/b] A new [Animation] object, or [code]null[/code] if there are no entries.
-##
+## to target the correct label node's text property.[br]
+## [br]
+## [b]Returns:[/b] A new [Animation] object, or [code]null[/code] if there are no entries.[br]
+## [br]
 ## [b]Example:[/b]
 ## [codeblock]
 ## var animation = subtitles.create_animation()
@@ -297,20 +300,20 @@ func create_animation() -> Animation:
 	return animation
 
 
-## Injects a subtitle animation into an [AnimationPlayer].
-##
+## Injects a subtitle animation into an [AnimationPlayer].[br]
+## [br]
 ## Creates a subtitle animation and adds it to the specified [AnimationPlayer]. The animation
 ## will control the text property of the provided label node ([Label] or [RichTextLabel]).
 ## If an animation with the same name already exists, only the track for the specified label
-## will be removed and replaced, preserving other tracks in the animation.
-##
-## This method can be called at runtime to dynamically inject subtitle animations.
-##
-## [b]Returns:[/b] [constant OK] on success, or one of the following error codes:
-## - [constant ERR_INVALID_DATA]: The subtitle resource has no entries.
-## - [constant ERR_INVALID_PARAMETER]: Invalid [param p_animation_player] or [param p_label].
-## - [constant ERR_CANT_CREATE]: Failed to create the animation.
-##
+## will be removed and replaced, preserving other tracks in the animation.[br]
+## [br]
+## This method can be called at runtime to dynamically inject subtitle animations.[br]
+## [br]
+## [b]Returns:[/b] [constant OK] on success, or one of the following error codes:[br]
+## - [constant ERR_INVALID_DATA]: The subtitle resource has no entries.[br]
+## - [constant ERR_INVALID_PARAMETER]: Invalid [param p_animation_player] or [param p_label].[br]
+## - [constant ERR_CANT_CREATE]: Failed to create the animation. [br]
+## [br]
 ## [b]Example:[/b]
 ## [codeblock]
 ## var subtitles = load("res://subtitles/dialog.srt")
@@ -396,8 +399,8 @@ func inject_animation(p_animation_name: String, p_animation_player: AnimationPla
 	return OK
 
 
-## Returns the start time of an entry at the given index.
-##
+## Returns the start time of an entry at the given index.[br]
+## [br]
 ## [b]Returns:[/b] The start time in seconds, or [code]0.0[/code] if the index is out of bounds.
 func get_entry_start_time(p_entry_id: int) -> float:
 	if p_entry_id < 0 or p_entry_id >= _entries.size():
@@ -405,8 +408,8 @@ func get_entry_start_time(p_entry_id: int) -> float:
 	return _entries[p_entry_id].get(SubtitleEntry._key.START_TIME, 0.0)
 
 
-## Returns the end time of an entry at the given index.
-##
+## Returns the end time of an entry at the given index.[br]
+## [br]
 ## [b]Returns:[/b] The end time in seconds, or [code]0.0[/code] if the index is out of bounds.
 func get_entry_end_time(p_entry_id: int) -> float:
 	if p_entry_id < 0 or p_entry_id >= _entries.size():
@@ -414,8 +417,8 @@ func get_entry_end_time(p_entry_id: int) -> float:
 	return _entries[p_entry_id].get(SubtitleEntry._key.END_TIME, 0.0)
 
 
-## Returns the text of an entry at the given index.
-##
+## Returns the text of an entry at the given index.[br]
+## [br]
 ## [b]Returns:[/b] The subtitle text, or an empty string if the index is out of bounds.
 func get_entry_text(p_entry_id: int) -> String:
 	if p_entry_id < 0 or p_entry_id >= _entries.size():
@@ -423,8 +426,8 @@ func get_entry_text(p_entry_id: int) -> String:
 	return _entries[p_entry_id].get(SubtitleEntry._key.TEXT, "")
 
 
-## Returns a [SubtitleEntry] wrapper for the entry at the given index.
-##
+## Returns a [SubtitleEntry] wrapper for the entry at the given index.[br]
+## [br]
 ## [b]Returns:[/b] A [SubtitleEntry] object, or [code]null[/code] if the index is out of bounds.
 func get_subtitle_entry(p_entry_id: int) -> SubtitleEntry:
 	if p_entry_id < 0 or p_entry_id >= _entries.size():
@@ -432,30 +435,47 @@ func get_subtitle_entry(p_entry_id: int) -> SubtitleEntry:
 	return SubtitleEntry.new(_entries[p_entry_id])
 
 
-# Iterator support: Initializes the iterator for for-in loops
-# Returns true if there are entries to iterate, false otherwise
+# Initializes the iterator for for-in loops.
+#
+# Enables iteration through subtitle entries using [code]for entry in subtitles[/code] syntax.
+# This is called automatically by Godot when using for-in loops.
+#
+# [b]Example:[/b]
+# [codeblock]
+# for entry in subtitles:
+#     print(entry.get_text())
+# [/codeblock]
+#
+# [b]Returns:[/b] [code]true[/code] if there are entries to iterate, [code]false[/code] otherwise.
 func _iter_init(_p_args: Array) -> bool:
 	_iter_needle = 0
 	return _iter_needle < _entries.size()
 
 
-# Iterator support: Advances to the next entry
-# Returns true if there are more entries, false otherwise
+# Advances to the next entry during iteration.
+#
+# Called automatically by Godot during for-in loops to move to the next entry.
+#
+# [b]Returns:[/b] [code]true[/code] if there are more entries, [code]false[/code] otherwise.
 func _iter_next(_p_args: Array) -> bool:
 	_iter_needle += 1
 	return _iter_needle < _entries.size()
 
 
-# Iterator support: Returns the current SubtitleEntry at the iterator position
+# Returns the current [SubtitleEntry] at the iterator position.
+#
+# Called automatically by Godot during for-in loops to retrieve the current entry.
+#
+# [b]Returns:[/b] A [SubtitleEntry] wrapper for the current subtitle entry.
 func _iter_get(_p_args: Variant) -> SubtitleEntry:
 	return SubtitleEntry.new(_entries[_iter_needle])
 
 
-## Parses SubRip (SRT) subtitle content at runtime.
-##
+## Parses SubRip (SRT) subtitle content at runtime.[br]
+## [br]
 ## Parses SRT format subtitle content and populates this resource with the parsed entries.
-## Optionally removes HTML and ASS formatting tags from the subtitle text.
-##
+## Optionally removes HTML and ASS formatting tags from the subtitle text.[br]
+## [br]
 ## [b]Returns:[/b] [constant OK] on success, or [constant ERR_PARSE_ERROR] on failure.
 func parse_srt(p_content: String, p_remove_html_tags: bool = true, p_remove_ass_tags: bool = true) -> Error:
 	var parsed_entries: Array[Dictionary] = __parse_srt(p_content, "", p_remove_html_tags, p_remove_ass_tags)
@@ -467,11 +487,11 @@ func parse_srt(p_content: String, p_remove_html_tags: bool = true, p_remove_ass_
 	return OK
 
 
-## Parses WebVTT (VTT) subtitle content at runtime.
-##
+## Parses WebVTT (VTT) subtitle content at runtime.[br]
+## [br]
 ## Parses WebVTT format subtitle content and populates this resource with the parsed entries.
-## Optionally removes HTML and ASS formatting tags from the subtitle text.
-##
+## Optionally removes HTML and ASS formatting tags from the subtitle text.[br]
+## [br]
 ## [b]Returns:[/b] [constant OK] on success, or [constant ERR_PARSE_ERROR] on failure.
 func parse_vtt(p_content: String, p_remove_html_tags: bool = true, p_remove_ass_tags: bool = true) -> Error:
 	var parsed_entries: Array[Dictionary] = __parse_vtt(p_content, "", p_remove_html_tags, p_remove_ass_tags)
@@ -483,11 +503,11 @@ func parse_vtt(p_content: String, p_remove_html_tags: bool = true, p_remove_ass_
 	return OK
 
 
-## Parses LRC (lyrics) subtitle content at runtime.
-##
+## Parses LRC (lyrics) subtitle content at runtime.[br]
+## [br]
 ## Parses LRC format subtitle content (commonly used for song lyrics) and populates
-## this resource with the parsed entries. Optionally removes HTML and ASS formatting tags.
-##
+## [br]
+## this resource with the parsed entries. Optionally removes HTML and ASS formatting tags.[br]
 ## [b]Returns:[/b] [constant OK] on success, or [constant ERR_PARSE_ERROR] on failure.
 func parse_lrc(p_content: String, p_remove_html_tags: bool = true, p_remove_ass_tags: bool = true) -> Error:
 	var parsed_entries: Array[Dictionary] = __parse_lrc(p_content, "", p_remove_html_tags, p_remove_ass_tags)
@@ -499,11 +519,11 @@ func parse_lrc(p_content: String, p_remove_html_tags: bool = true, p_remove_ass_
 	return OK
 
 
-## Parses SubStation Alpha (SSA/ASS) subtitle content at runtime.
-##
+## Parses SubStation Alpha (SSA/ASS) subtitle content at runtime.[br]
+## [br]
 ## Parses SSA or ASS format subtitle content and populates this resource with the parsed entries.
-## Optionally removes HTML and ASS formatting tags from the subtitle text.
-##
+## Optionally removes HTML and ASS formatting tags from the subtitle text.[br]
+## [br]
 ## [b]Returns:[/b] [constant OK] on success, or [constant ERR_PARSE_ERROR] on failure.
 func parse_ssa(p_content: String, p_remove_html_tags: bool = true, p_remove_ass_tags: bool = true) -> Error:
 	var parsed_entries: Array[Dictionary] = __parse_ssa(p_content, "", p_remove_html_tags, p_remove_ass_tags)
@@ -515,11 +535,11 @@ func parse_ssa(p_content: String, p_remove_html_tags: bool = true, p_remove_ass_
 	return OK
 
 
-## Parses YouTube SBV subtitle content at runtime.
-##
+## Parses YouTube SBV subtitle content at runtime.[br]
+## [br]
 ## Parses SBV format subtitle content (YouTube subtitle format) and populates this resource
-## with the parsed entries. Optionally removes HTML and ASS formatting tags.
-##
+## with the parsed entries. Optionally removes HTML and ASS formatting tags.[br]
+## [br]
 ## [b]Returns:[/b] [constant OK] on success, or [constant ERR_PARSE_ERROR] on failure.
 func parse_sbv(p_content: String, p_remove_html_tags: bool = true, p_remove_ass_tags: bool = true) -> Error:
 	var parsed_entries: Array[Dictionary] = __parse_sbv(p_content, "", p_remove_html_tags, p_remove_ass_tags)
@@ -531,9 +551,13 @@ func parse_sbv(p_content: String, p_remove_html_tags: bool = true, p_remove_ass_
 	return OK
 
 
-## Parses TTML/DFXP content at runtime and populates this Subtitles resource.
-## DFXP (Distribution Format Exchange Profile) is the same format as TTML, just an older name.
-## Returns OK on success, or an error code on failure.
+## Parses TTML/DFXP subtitle content at runtime.[br]
+## [br]
+## Parses TTML (Timed Text Markup Language) or DFXP format subtitle content and populates
+## this resource with the parsed entries. DFXP (Distribution Format Exchange Profile) is
+## the same format as TTML, just an older name. Optionally removes HTML and ASS formatting tags.[br]
+## [br]
+## [b]Returns:[/b] [constant OK] on success, or [constant ERR_PARSE_ERROR] on failure.
 func parse_ttml(p_content: String, p_remove_html_tags: bool = true, p_remove_ass_tags: bool = true) -> Error:
 	var parsed_entries: Array[Dictionary] = __parse_ttml(p_content, "", p_remove_html_tags, p_remove_ass_tags)
 
@@ -544,9 +568,12 @@ func parse_ttml(p_content: String, p_remove_html_tags: bool = true, p_remove_ass
 	return OK
 
 
-## Parses SCC content at runtime and populates this Subtitles resource.
-## Returns OK on success, or an error code on failure.
-## The optional p_framerate parameter lets you adjust timestamps to the desired playback framerate.
+## Parses Scenarist Closed Caption (SCC) subtitle content at runtime.[br]
+## [br]
+## Parses SCC format subtitle content and populates this resource with the parsed entries.
+## Optionally removes HTML and ASS formatting tags.[br]
+## [br]
+## [b]Returns:[/b] [constant OK] on success, or [constant ERR_PARSE_ERROR] on failure.
 func parse_scc(p_content: String, p_framerate: float = 29.97, p_remove_html_tags: bool = true, p_remove_ass_tags: bool = true) -> Error:
 	var parsed_entries: Array[Dictionary] = __parse_scc(p_content, p_framerate, "", p_remove_html_tags, p_remove_ass_tags)
 
@@ -557,9 +584,13 @@ func parse_scc(p_content: String, p_framerate: float = 29.97, p_remove_html_tags
 	return OK
 
 
-## Parses SUB content at runtime and populates this Subtitles resource.
-## Returns OK on success, or an error code on failure.
-## The p_framerate parameter specifies the video framerate (default: 25.0 fps).
+## Parses MicroDVD (SUB) subtitle content at runtime.[br]
+## [br]
+## Parses SUB (MicroDVD) format subtitle content and populates this resource with the parsed
+## entries. This is a frame-based format that requires a framerate for conversion to seconds.
+## Optionally removes HTML and ASS formatting tags.[br]
+## [br]
+## [b]Returns:[/b] [constant OK] on success, or [constant ERR_PARSE_ERROR] on failure.
 func parse_sub(p_content: String, p_framerate: float = 25.0, p_remove_html_tags: bool = true, p_remove_ass_tags: bool = true) -> Error:
 	var parsed_entries: Array[Dictionary] = __parse_sub(p_content, p_framerate, "", p_remove_html_tags, p_remove_ass_tags)
 
@@ -570,22 +601,20 @@ func parse_sub(p_content: String, p_framerate: float = 25.0, p_remove_html_tags:
 	return OK
 
 
-## Parses SMI/SAMI content at runtime and populates this Subtitles resource.
-## Returns OK on success, or an error code on failure.
-## Parses SAMI (Synchronized Accessible Media Interchange) content at runtime and populates this Subtitles resource.
-##
-## SAMI is an XML-based subtitle format developed by Microsoft. It supports both .smi and .sami file extensions.
-## The format uses <sync start="timestamp"> tags to define subtitle timing and <p> tags for content.
-##
-## Format features:
-## - Case-insensitive XML tags (SYNC/sync, P/p, etc.)
-## - Timestamps in milliseconds without quotes, or with single/double quotes
-## - HTML entities (&amp;, &lt;, &#169;, &#x2122;, etc.) are automatically decoded
-## - <br> or <br/> tags are converted to newlines
-## - Empty entries (containing only &nbsp; or whitespace) are automatically skipped
-## - Excessive whitespace is normalized while preserving intentional line breaks
-##
-## Example SAMI format:
+## Parses SAMI (Synchronized Accessible Media Interchange) subtitle content at runtime.[br]
+## [br]
+## SAMI is an XML-based subtitle format developed by Microsoft. It supports both .smi and .sami file extensions.[br]
+## The format uses [code]<sync start="timestamp">[/code] tags to define subtitle timing and [code]<p>[/code] tags for content.[br]
+## [br]
+## [b]Format features:[/b][br]
+## - Case-insensitive XML tags (SYNC/sync, P/p, etc.)[br]
+## - Timestamps in milliseconds without quotes, or with single/double quotes[br]
+## - HTML entities (&amp;, &lt;, &#169;, &#x2122;, etc.) are automatically decoded[br]
+## - [code]<br>[/code] or [code]<br/>[/code] tags are converted to newlines[br]
+## - Empty entries (containing only &nbsp; or whitespace) are automatically skipped[br]
+## - Excessive whitespace is normalized while preserving intentional line breaks[br]
+## [br]
+## [b]Example SAMI format:[/b]
 ## [codeblock]
 ## <sami>
 ##  <body>
@@ -598,11 +627,8 @@ func parse_sub(p_content: String, p_framerate: float = 25.0, p_remove_html_tags:
 ##  </body>
 ## </sami>
 ## [/codeblock]
-##
-## @param p_content: The SAMI file content as a string
-## @param p_remove_html_tags: Whether to remove HTML tags from subtitle text (default: true)
-## @param p_remove_ass_tags: Whether to remove SSA/ASS formatting tags from text (default: true)
-## @return: OK on success, or ERR_PARSE_ERROR on failure
+## [br]
+## [b]Returns:[/b] [constant OK] on success, or [constant ERR_PARSE_ERROR] on failure.
 func parse_smi(p_content: String, p_remove_html_tags: bool = true, p_remove_ass_tags: bool = true) -> Error:
 	var parsed_entries: Array[Dictionary] = __parse_smi(p_content, "", p_remove_html_tags, p_remove_ass_tags)
 
@@ -613,9 +639,15 @@ func parse_smi(p_content: String, p_remove_html_tags: bool = true, p_remove_ass_
 	return OK
 
 
-## Parses EBU-STL content at runtime and populates this Subtitles resource.
-## Returns OK on success, or an error code on failure.
-## Note: EBU-STL is a binary format, so p_content must be PackedByteArray.
+## Parses EBU-STL (European Broadcasting Union Subtitling) binary data at runtime.[br]
+## [br]
+## Parses EBU-STL binary subtitle data and populates this resource with the parsed entries.
+## Unlike other formats, EBU-STL is a binary format that requires [PackedByteArray] input.
+## Optionally removes HTML and ASS formatting tags.[br]
+## [br]
+## [b]Note:[/b] This method requires binary data as [PackedByteArray], not a string.[br]
+## [br]
+## [b]Returns:[/b] [constant OK] on success, or [constant ERR_PARSE_ERROR] on failure.
 func parse_ebu_stl(p_bytes: PackedByteArray, p_remove_html_tags: bool = true, p_remove_ass_tags: bool = true) -> Error:
 	var entries: Array[Dictionary] = __parse_ebu_stl(p_bytes, "", p_remove_html_tags, p_remove_ass_tags)
 
@@ -626,12 +658,12 @@ func parse_ebu_stl(p_bytes: PackedByteArray, p_remove_html_tags: bool = true, p_
 	return OK
 
 
-## Parses MPEG-4 Timed Text (TTXT) subtitle content at runtime.
-##
+## Parses MPEG-4 Timed Text (TTXT) subtitle content at runtime.[br]
+## [br]
 ## Parses 3GPP TTXT format subtitle content and populates this resource with the parsed entries.
-## Optionally removes HTML and ASS formatting tags.
-##
-## [b]Returns:[/b] [constant OK] on success, or [constant ERR_PARSE_ERROR] on failure.
+## Optionally removes HTML and ASS formatting tags.[br]
+## [br]
+## [b]Returns:[/b] [constant OK] on success, or [constant ERR_PARSE_ERROR] on failure.[br]
 func parse_ttxt(p_content: String, p_remove_html_tags: bool = true, p_remove_ass_tags: bool = true) -> Error:
 	var parsed_entries: Array[Dictionary] = __parse_ttxt(p_content, "", p_remove_html_tags, p_remove_ass_tags)
 
@@ -642,8 +674,12 @@ func parse_ttxt(p_content: String, p_remove_html_tags: bool = true, p_remove_ass
 	return OK
 
 
-## Parses MPL2 (MPSub) content at runtime and populates this Subtitles resource.
-## Returns OK on success, or an error code on failure.
+## Parses MPL2 (MPSub) subtitle content at runtime.[br]
+## [br]
+## Parses MPL2 format subtitle content and populates this resource with the parsed entries.
+## Optionally removes HTML and ASS formatting tags.[br]
+## [br]
+## [b]Returns:[/b] [constant OK] on success, or [constant ERR_PARSE_ERROR] on failure.
 func parse_mpl2(p_content: String, p_framerate: float = 25.0, p_remove_html_tags: bool = true, p_remove_ass_tags: bool = true) -> Error:
 	var parsed_entries: Array[Dictionary] = __parse_mpl2(p_content, "", p_remove_html_tags, p_remove_ass_tags)
 
@@ -654,12 +690,12 @@ func parse_mpl2(p_content: String, p_framerate: float = 25.0, p_remove_html_tags
 	return OK
 
 
-## Parses TMPlayer (TMP) subtitle content at runtime.
-##
+## Parses TMPlayer (TMP) subtitle content at runtime.[br]
+## [br]
 ## Parses TMPlayer format subtitle content and populates this resource with the parsed entries.
-## Optionally removes HTML and ASS formatting tags.
-##
-## [b]Returns:[/b] [constant OK] on success, or [constant ERR_PARSE_ERROR] on failure.
+## Optionally removes HTML and ASS formatting tags.[br]
+## [br]
+## [b]Returns:[/b] [constant OK] on success, or [constant ERR_PARSE_ERROR] on failure.[br]
 func parse_tmp(p_content: String, p_remove_html_tags: bool = true, p_remove_ass_tags: bool = true) -> Error:
 	var parsed_entries: Array[Dictionary] = __parse_tmp(p_content, "", p_remove_html_tags, p_remove_ass_tags)
 
@@ -670,9 +706,13 @@ func parse_tmp(p_content: String, p_remove_html_tags: bool = true, p_remove_ass_
 	return OK
 
 
-## Parses Adobe Encore content at runtime and populates this Subtitles resource.
-## Returns OK on success, or an error code on failure.
-## The p_framerate parameter specifies the video framerate (default: 25.0 fps).
+## Parses Adobe Encore subtitle content at runtime.[br]
+## [br]
+## Parses Adobe Encore format subtitle content and populates this resource with the parsed entries.
+## This is a frame-based format that requires a framerate for conversion to seconds.
+## Optionally removes HTML and ASS formatting tags.[br]
+## [br]
+## [b]Returns:[/b] [constant OK] on success, or [constant ERR_PARSE_ERROR] on failure.[br]
 func parse_encore(p_content: String, p_framerate: float = 25.0, p_remove_html_tags: bool = true, p_remove_ass_tags: bool = true) -> Error:
 	var parsed_entries: Array[Dictionary] = __parse_encore(p_content, p_framerate, "", p_remove_html_tags, p_remove_ass_tags)
 
@@ -683,9 +723,13 @@ func parse_encore(p_content: String, p_framerate: float = 25.0, p_remove_html_ta
 	return OK
 
 
-## Parses Transtation content at runtime and populates this Subtitles resource.
-## Returns OK on success, or an error code on failure.
-## The p_framerate parameter specifies the video framerate (default: 30.0 fps).
+## Parses Transtation subtitle content at runtime.[br]
+## [br]
+## Parses Transtation format subtitle content and populates this resource with the parsed entries.
+## This is a frame-based format that requires a framerate for conversion to seconds.
+## Optionally removes HTML and ASS formatting tags.[br]
+## [br]
+## [b]Returns:[/b] [constant OK] on success, or [constant ERR_PARSE_ERROR] on failure.[br]
 func parse_transtation(p_content: String, p_framerate: float = 30.0, p_remove_html_tags: bool = true, p_remove_ass_tags: bool = true) -> Error:
 	var parsed_entries: Array[Dictionary] = __parse_transtation(p_content, p_framerate, "", p_remove_html_tags, p_remove_ass_tags)
 
@@ -696,11 +740,18 @@ func parse_transtation(p_content: String, p_framerate: float = 30.0, p_remove_ht
 	return OK
 
 
-## Parses subtitle content at runtime based on the format string.
-## Parses subtitle content from a string with automatic format detection.
-## Supported formats: "srt", "vtt", "lrc", "ssa", "ass", "sbv", "ttml", "dfxp", "scc", "sub", "smi", "sami", "stl", "ttxt", "encore", "transtation".
-## Returns OK on success, or an error code on failure.
-## For frame-based formats (SUB, SCC, Encore, Transtation), you can pass an optional framerate parameter.
+## Parses subtitle content from a string with automatic format detection.[br]
+## [br]
+## Parses subtitle content based on the specified format extension and populates this resource
+## with the parsed entries. Automatically selects the appropriate parser for the given format.
+## For frame-based formats (SUB, SCC, Encore, Transtation), provide the appropriate framerate.[br]
+## [br]
+## [b]Supported formats:[/b][br]
+## srt, vtt, lrc, ssa, ass, sbv, ttml, dfxp, scc, sub, smi, sami, stl, ttxt, mpl, tmp, encore, transtation[br]
+## [br]
+## [b]Returns:[/b] [constant OK] on success, [constant ERR_FILE_UNRECOGNIZED] for unsupported formats,
+## [constant ERR_INVALID_DATA] for EBU-STL (which requires binary data), or [constant ERR_PARSE_ERROR]
+## on parsing failure.
 func parse_from_string(p_content: String, p_extension: String, p_framerate: float = 25.0, p_file_path: String = "", p_remove_html_tags: bool = true, p_remove_ass_tags: bool = true) -> Error:
 	var entries: Array[Dictionary] = []
 	match p_extension.to_lower():
@@ -746,10 +797,13 @@ func parse_from_string(p_content: String, p_extension: String, p_framerate: floa
 	return OK
 
 
-## Loads and parses a subtitle file at runtime.
-## Automatically detects format from file extension.
-## Returns OK on success, or an error code on failure.
-## For frame-based formats (SUB, SCC), you can pass an optional framerate parameter.
+## Loads and parses a subtitle file at runtime.[br]
+## [br]
+## Loads a subtitle file from disk and parses it based on the file extension. Automatically
+## detects the format and selects the appropriate parser. For frame-based formats (SUB, SCC,
+## Encore, Transtation), provide the appropriate framerate.[br]
+## [br]
+## [b]Returns:[/b] [constant OK] on success, or an appropriate error code on failure.
 func load_from_file(p_file_path: String, p_framerate: float = 25.0, p_remove_html_tags: bool = true, p_remove_ass_tags: bool = true) -> Error:
 	var file: FileAccess = FileAccess.open(p_file_path, FileAccess.READ)
 	if file == null:

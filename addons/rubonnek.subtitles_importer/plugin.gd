@@ -37,7 +37,11 @@ extends EditorPlugin
 var _m_subtitles_importer_import_plugin: EditorImportPlugin
 var _m_success_dialog: AcceptDialog
 var _m_error_dialog: AcceptDialog
+
+# The name of the tool menu item displayed in the editor.
 const TOOL_MENU_ITEM_STRING: String = "Inject Subtitles into AnimationPlayer"
+
+# The default name used for the generated subtitle animation.
 const ANIMATION_NAME: String = "subtitles"
 
 

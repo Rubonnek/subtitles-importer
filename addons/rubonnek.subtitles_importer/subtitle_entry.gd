@@ -36,7 +36,7 @@ extends RefCounted
 ## without exposing the internal dictionary structure.
 
 
-## Enum for dictionary keys to avoid string-based lookups (private convention: lowercase)
+# Enum for dictionary keys to avoid string-based lookups (private convention: lowercase)
 enum _key {
 	START_TIME,
 	END_TIME,
