@@ -35,7 +35,6 @@ extends EditorImportPlugin
 ## Parsing is handled internally by the Subtitles class.
 ## Supported formats: SRT, VTT, LRC, SSA, ASS, SBV, TTML, DFXP, SCC, SUB, SMI, SAMI, EBU-STL, TTXT, Adobe Encore, Transtation
 
-
 func _get_importer_name() -> String:
 	return "rubonnek.subtitle_importer"
 
@@ -69,12 +68,12 @@ func _get_import_options(_p_path: String, _p_preset_index: int) -> Array[Diction
 		{
 			"name": "remove_html_tags",
 			"default_value": true,
-			"hint_string": "Remove HTML tags from subtitle text"
+			"hint_string": "Remove HTML tags from subtitle text",
 		},
 		{
 			"name": "remove_ass_tags",
 			"default_value": true,
-			"hint_string": "Remove ASS/SSA tags like {\\an8}, {\\i1}, etc."
+			"hint_string": "Remove ASS/SSA tags like {\\an8}, {\\i1}, etc.",
 		},
 		{
 			"name": "framerate",
@@ -82,8 +81,8 @@ func _get_import_options(_p_path: String, _p_preset_index: int) -> Array[Diction
 			"property_hint": PROPERTY_HINT_RANGE,
 			"hint_string": "10.0,120.0,0.001",
 			"usage": PROPERTY_USAGE_DEFAULT,
-			"hint_string_extra": "Framerate for frame-based formats (SUB, SCC, Encore, Transtation)"
-		}
+			"hint_string_extra": "Framerate for frame-based formats (SUB, SCC, Encore, Transtation)",
+		},
 	]
 
 

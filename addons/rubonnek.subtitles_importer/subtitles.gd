@@ -29,6 +29,7 @@
 
 @tool
 extends Resource
+
 class_name Subtitles
 ## A resource for storing and managing subtitle data from various subtitle file formats.[br]
 ## [br]
@@ -65,7 +66,6 @@ class_name Subtitles
 ## [br]SRT, VTT, LRC, SSA/ASS, SBV, TTML/DFXP, SCC, SUB (MicroDVD), SMI/SAMI,
 ## [br]EBU-STL, TTXT, MPL2, TMP (TMPlayer), Adobe Encore, Transtation
 
-
 # Internal array of subtitle entries stored as dictionaries with start_time, end_time, and text keys
 @export var _entries: Array[Dictionary] = []
 
@@ -73,26 +73,28 @@ class_name Subtitles
 ## [br]
 ## Contains all subtitle formats that can be imported and parsed by this plugin.
 ## Use this to check if a file extension is supported before attempting to load it.
-static var supported_extensions : PackedStringArray = PackedStringArray([
-		"srt",   # SubRip
-		"vtt",   # WebVTT
-		"lrc",   # LRC (Lyrics)
-		"ssa",   # SubStation Alpha
-		"ass",   # Advanced SubStation Alpha
-		"sbv",   # YouTube subtitles
-		"ttml",  # Timed Text Markup Language
-		"dfxp",  # Distribution Format Exchange Profile (same as TTML, older name)
-		"scc",   # Scenarist Closed Caption
-		"sub",   # MicroDVD
-		"smi",   # SAMI
-		"sami",  # SAMI (alternate extension)
-		"stl",   # EBU-STL (European Broadcasting Union Subtitling)
-		"ttxt",  # MPEG-4 TTXT (3GPP Timed Text)
-		"mpl",   # MPL2 (MPSub)
-		"tmp",   # TMPlayer
+static var supported_extensions: PackedStringArray = PackedStringArray(
+	[
+		"srt", # SubRip
+		"vtt", # WebVTT
+		"lrc", # LRC (Lyrics)
+		"ssa", # SubStation Alpha
+		"ass", # Advanced SubStation Alpha
+		"sbv", # YouTube subtitles
+		"ttml", # Timed Text Markup Language
+		"dfxp", # Distribution Format Exchange Profile (same as TTML, older name)
+		"scc", # Scenarist Closed Caption
+		"sub", # MicroDVD
+		"smi", # SAMI
+		"sami", # SAMI (alternate extension)
+		"stl", # EBU-STL (European Broadcasting Union Subtitling)
+		"ttxt", # MPEG-4 TTXT (3GPP Timed Text)
+		"mpl", # MPL2 (MPSub)
+		"tmp", # TMPlayer
 		"encore", # Adobe Encore
-		"transtation" # Transtation
-	])
+		"transtation", # Transtation
+	],
+)
 
 # Cached regex for HTML tag removal (compiled once on first use for performance)
 static var _html_tag_regex: RegEx = null
@@ -108,7 +110,6 @@ static var _lrc_timestamp_regex: RegEx = null
 
 # Iterator needle for tracking current position during for-in loops
 var _iter_needle: int = 0
-
 
 # Cached regex for SMI/SAMI <sync> tag matching
 static var _smi_sync_regex: RegEx = null
@@ -126,7 +127,7 @@ static var _smi_entity_regex: RegEx = null
 static var _smi_hex_entity_regex: RegEx = null
 
 # Cached character map for SCC (Scenarist Closed Caption) byte-to-character decoding
-static var _scc_char_map: Dictionary = {}
+static var _scc_char_map: Dictionary = { }
 
 ## Tolerance for timestamp comparison (1 millisecond)
 const TIMESTAMP_TOLERANCE: float = 0.001
@@ -216,11 +217,13 @@ func get_entry_count() -> int:
 ## Creates and appends a new subtitle entry with the specified timing and text.
 ## The entry will be added to the end of the internal entries array.
 func add_entry(p_start_time: float, p_end_time: float, p_text: String) -> void:
-	_entries.append({
-		SubtitleEntry._key.START_TIME: p_start_time,
-		SubtitleEntry._key.END_TIME: p_end_time,
-		SubtitleEntry._key.TEXT: p_text
-	})
+	_entries.append(
+		{
+			SubtitleEntry._key.START_TIME: p_start_time,
+			SubtitleEntry._key.END_TIME: p_end_time,
+			SubtitleEntry._key.TEXT: p_text,
+		},
+	)
 
 
 ## Returns a reference to the internal entries array.[br]
@@ -823,10 +826,10 @@ func load_from_file(p_file_path: String, p_framerate: float = 25.0, p_remove_htm
 
 	return result
 
-
 # ============================================================================
 # PRIVATE PARSER IMPLEMENTATIONS
 # ============================================================================
+
 
 # Parses SubRip (SRT) subtitle content and returns an array of subtitle entry dictionaries.
 # Each block is separated by blank lines and contains: index, timestamps, and text lines.
@@ -874,11 +877,13 @@ func __parse_srt(p_content: String, p_file_path: String = "", p_remove_html_tags
 		if p_remove_ass_tags:
 			text = __remove_ass_tags(text)
 
-		entries.append({
-			SubtitleEntry._key.START_TIME: start_time,
-			SubtitleEntry._key.END_TIME: end_time,
-			SubtitleEntry._key.TEXT: text
-		})
+		entries.append(
+			{
+				SubtitleEntry._key.START_TIME: start_time,
+				SubtitleEntry._key.END_TIME: end_time,
+				SubtitleEntry._key.TEXT: text,
+			},
+		)
 
 	# Post-process: merge consecutive entries with same timestamps
 	entries = __merge_same_timestamp_entries(entries)
@@ -1000,11 +1005,13 @@ func __parse_vtt(p_content: String, p_file_path: String = "", p_remove_html_tags
 			if p_remove_ass_tags:
 				text = __remove_ass_tags(text)
 
-			entries.append({
-				SubtitleEntry._key.START_TIME: start_time,
-				SubtitleEntry._key.END_TIME: end_time,
-				SubtitleEntry._key.TEXT: text
-			})
+			entries.append(
+				{
+					SubtitleEntry._key.START_TIME: start_time,
+					SubtitleEntry._key.END_TIME: end_time,
+					SubtitleEntry._key.TEXT: text,
+				},
+			)
 		else:
 			i += 1
 
@@ -1050,7 +1057,7 @@ func __parse_vtt_timestamp(p_timestamp: String) -> float:
 
 	if dot_pos >= 0:
 		seconds = seconds_part.substr(0, dot_pos).to_float()
-		milliseconds = seconds_part.substr(dot_pos + 1).to_float() * 0.001  # Multiply by 0.001 instead of dividing by 1000
+		milliseconds = seconds_part.substr(dot_pos + 1).to_float() * 0.001 # Multiply by 0.001 instead of dividing by 1000
 	else:
 		seconds = seconds_part.to_float()
 
@@ -1081,7 +1088,7 @@ func __parse_lrc(p_content: String, p_file_path: String = "", p_remove_html_tags
 		# Optimized: check first character before processing
 		if line_len > 2 and line[0] == '[':
 			var colon_pos: int = line.find(":")
-			if colon_pos > 0 and colon_pos < 10:  # Metadata tags have colon early
+			if colon_pos > 0 and colon_pos < 10: # Metadata tags have colon early
 				var close_bracket: int = line.find("]")
 				if close_bracket > 0:
 					var before_colon: String = line.substr(1, colon_pos - 1)
@@ -1123,15 +1130,18 @@ func __parse_lrc(p_content: String, p_file_path: String = "", p_remove_html_tags
 				seconds = seconds_str.to_float()
 			var timestamp: float = float(minutes) * 60.0 + seconds
 
-			temp_entries.append({
-				SubtitleEntry._key.START_TIME: timestamp,
-				SubtitleEntry._key.END_TIME: -1.0,
-				SubtitleEntry._key.TEXT: text
-			})
+			temp_entries.append(
+				{
+					SubtitleEntry._key.START_TIME: timestamp,
+					SubtitleEntry._key.END_TIME: -1.0,
+					SubtitleEntry._key.TEXT: text,
+				},
+			)
 
 	# Sort entries by start time
-	temp_entries.sort_custom(func(p_a: Dictionary, p_b: Dictionary) -> bool:
-		return p_a[SubtitleEntry._key.START_TIME] < p_b[SubtitleEntry._key.START_TIME]
+	temp_entries.sort_custom(
+		func(p_a: Dictionary, p_b: Dictionary) -> bool:
+			return p_a[SubtitleEntry._key.START_TIME] < p_b[SubtitleEntry._key.START_TIME]
 	)
 
 	# Calculate end times based on next entry's start time
@@ -1218,12 +1228,12 @@ func __parse_ssa_dialogue_line(p_line: String, p_format: Array[String], p_remove
 	# Find the text field index
 	var text_index: int = p_format.find("text")
 	if text_index < 0:
-		return {}
+		return { }
 
 	# Split the line manually to handle commas in text field
 	# Pre-allocate array for better performance
 	var parts: PackedStringArray = PackedStringArray()
-	var _resize_error: int = parts.resize(text_index + 2)  # Pre-allocate expected size
+	var _resize_error: int = parts.resize(text_index + 2) # Pre-allocate expected size
 	var part_count: int = 0
 	var start_pos: int = 0
 	var line_len: int = p_line.length()
@@ -1245,10 +1255,10 @@ func __parse_ssa_dialogue_line(p_line: String, p_format: Array[String], p_remove
 
 	# We should have at least text_index + 1 parts
 	if part_count < text_index + 1:
-		return {}
+		return { }
 
 	# Map parts to field names (optimized with direct access)
-	var field_values: Dictionary = {}
+	var field_values: Dictionary = { }
 	var format_size: int = p_format.size()
 	var min_size: int = mini(part_count, format_size)
 	for i: int in min_size:
@@ -1256,7 +1266,7 @@ func __parse_ssa_dialogue_line(p_line: String, p_format: Array[String], p_remove
 
 	# Extract required fields (optimized with direct access)
 	if not ("start" in field_values and "end" in field_values and "text" in field_values):
-		return {}
+		return { }
 
 	var start_str: String = field_values["start"]
 	var end_str: String = field_values["end"]
@@ -1266,7 +1276,7 @@ func __parse_ssa_dialogue_line(p_line: String, p_format: Array[String], p_remove
 	var end_time: float = __parse_ssa_timestamp(end_str)
 
 	if start_time < 0 or end_time < 0:
-		return {}
+		return { }
 
 	# Remove SSA/ASS tags
 	if p_remove_ass_tags:
@@ -1278,7 +1288,7 @@ func __parse_ssa_dialogue_line(p_line: String, p_format: Array[String], p_remove
 	return {
 		SubtitleEntry._key.START_TIME: start_time,
 		SubtitleEntry._key.END_TIME: end_time,
-		SubtitleEntry._key.TEXT: text
+		SubtitleEntry._key.TEXT: text,
 	}
 
 
@@ -1308,7 +1318,7 @@ func __parse_ssa_timestamp(p_timestamp: String) -> float:
 
 	if dot_pos >= 0:
 		seconds = seconds_part.substr(0, dot_pos).to_float()
-		centiseconds = seconds_part.substr(dot_pos + 1).to_float() * 0.01  # Divide by 100
+		centiseconds = seconds_part.substr(dot_pos + 1).to_float() * 0.01 # Divide by 100
 	else:
 		seconds = seconds_part.to_float()
 
@@ -1380,11 +1390,13 @@ func __parse_sbv(p_content: String, p_file_path: String = "", p_remove_html_tags
 		if p_remove_ass_tags:
 			text = __remove_ass_tags(text)
 
-		entries.append({
-			SubtitleEntry._key.START_TIME: start_time,
-			SubtitleEntry._key.END_TIME: end_time,
-			SubtitleEntry._key.TEXT: text
-		})
+		entries.append(
+			{
+				SubtitleEntry._key.START_TIME: start_time,
+				SubtitleEntry._key.END_TIME: end_time,
+				SubtitleEntry._key.TEXT: text,
+			},
+		)
 
 	# Post-process: merge consecutive entries with same timestamps
 	entries = __merge_same_timestamp_entries(entries)
@@ -1469,8 +1481,9 @@ func __parse_ttml(p_content: String, p_file_path: String = "", p_remove_html_tag
 					entries.append(entry)
 
 	# Sort entries by start time
-	entries.sort_custom(func(p_a: Dictionary, p_b: Dictionary) -> bool:
-		return p_a[SubtitleEntry._key.START_TIME] < p_b[SubtitleEntry._key.START_TIME]
+	entries.sort_custom(
+		func(p_a: Dictionary, p_b: Dictionary) -> bool:
+			return p_a[SubtitleEntry._key.START_TIME] < p_b[SubtitleEntry._key.START_TIME]
 	)
 
 	# Post-process: merge consecutive entries with same timestamps
@@ -1501,11 +1514,11 @@ func __parse_ttml_element(p_parser: XMLParser, p_framerate: float, p_tick_rate: 
 
 	# If no begin attribute, skip this element
 	if begin_attr.is_empty():
-		return {}
+		return { }
 
 	var start_time: float = __parse_ttml_time(begin_attr, p_framerate, p_tick_rate)
 	if start_time < 0:
-		return {}
+		return { }
 
 	var end_time: float = -1.0
 
@@ -1533,7 +1546,7 @@ func __parse_ttml_element(p_parser: XMLParser, p_framerate: float, p_tick_rate: 
 	return {
 		SubtitleEntry._key.START_TIME: start_time,
 		SubtitleEntry._key.END_TIME: end_time,
-		SubtitleEntry._key.TEXT: text.strip_edges()
+		SubtitleEntry._key.TEXT: text.strip_edges(),
 	}
 
 
@@ -1680,7 +1693,7 @@ func __parse_scc(p_content: String, p_framerate: float = 29.97, p_file_path: Str
 	var entries: Array[Dictionary] = []
 	var lines: PackedStringArray = __normalize_line_endings(p_content).split("\n")
 
-	var framerate: float = p_framerate if p_framerate > 0.0 else 29.97  # Default NTSC framerate
+	var framerate: float = p_framerate if p_framerate > 0.0 else 29.97 # Default NTSC framerate
 
 	var line_count: int = lines.size()
 	for line_idx: int in line_count:
@@ -1697,7 +1710,7 @@ func __parse_scc(p_content: String, p_framerate: float = 29.97, p_file_path: Str
 		# Parse timecode line format: HH:MM:SS:FF<tab>caption_data
 		# Optimized: check for colon first (most lines won't have it)
 		var first_colon: int = line.find(":")
-		if first_colon >= 0 and first_colon < 10:  # Timecode should have colon early
+		if first_colon >= 0 and first_colon < 10: # Timecode should have colon early
 			var tab_pos: int = line.find("\t")
 			if tab_pos < 0:
 				tab_pos = line.find(" ")
@@ -1726,11 +1739,13 @@ func __parse_scc(p_content: String, p_framerate: float = 29.97, p_file_path: Str
 					if p_remove_ass_tags:
 						entry_text = __remove_ass_tags(entry_text)
 
-					entries.append({
-						SubtitleEntry._key.START_TIME: timestamp,
-						SubtitleEntry._key.END_TIME: timestamp + 3.0,  # Default duration
-						SubtitleEntry._key.TEXT: entry_text.strip_edges()
-					})
+					entries.append(
+						{
+							SubtitleEntry._key.START_TIME: timestamp,
+							SubtitleEntry._key.END_TIME: timestamp + 3.0, # Default duration
+							SubtitleEntry._key.TEXT: entry_text.strip_edges(),
+						},
+					)
 
 	# Post-process: set end times based on next entry's start time
 	var entry_count: int = entries.size()
@@ -1786,18 +1801,102 @@ func __decode_scc_data(p_data: String) -> String:
 	# Initialize character map on first use (cache for performance)
 	if _scc_char_map.is_empty():
 		_scc_char_map = {
-		0x20: " ", 0x21: "!", 0x22: "\"", 0x23: "#", 0x24: "$", 0x25: "%", 0x26: "&", 0x27: "'",
-		0x28: "(", 0x29: ")", 0x2A: "á", 0x2B: "+", 0x2C: ",", 0x2D: "-", 0x2E: ".", 0x2F: "/",
-		0x30: "0", 0x31: "1", 0x32: "2", 0x33: "3", 0x34: "4", 0x35: "5", 0x36: "6", 0x37: "7",
-		0x38: "8", 0x39: "9", 0x3A: ":", 0x3B: ";", 0x3C: "<", 0x3D: "=", 0x3E: ">", 0x3F: "?",
-		0x40: "@", 0x41: "A", 0x42: "B", 0x43: "C", 0x44: "D", 0x45: "E", 0x46: "F", 0x47: "G",
-		0x48: "H", 0x49: "I", 0x4A: "J", 0x4B: "K", 0x4C: "L", 0x4D: "M", 0x4E: "N", 0x4F: "O",
-		0x50: "P", 0x51: "Q", 0x52: "R", 0x53: "S", 0x54: "T", 0x55: "U", 0x56: "V", 0x57: "W",
-		0x58: "X", 0x59: "Y", 0x5A: "Z", 0x5B: "[", 0x5C: "é", 0x5D: "]", 0x5E: "í", 0x5F: "ó",
-		0x60: "ú", 0x61: "a", 0x62: "b", 0x63: "c", 0x64: "d", 0x65: "e", 0x66: "f", 0x67: "g",
-		0x68: "h", 0x69: "i", 0x6A: "j", 0x6B: "k", 0x6C: "l", 0x6D: "m", 0x6E: "n", 0x6F: "o",
-		0x70: "p", 0x71: "q", 0x72: "r", 0x73: "s", 0x74: "t", 0x75: "u", 0x76: "v", 0x77: "w",
-		0x78: "x", 0x79: "y", 0x7A: "z", 0x7B: "ç", 0x7C: "÷", 0x7D: "Ñ", 0x7E: "ñ", 0x7F: "█"
+			0x20: " ",
+			0x21: "!",
+			0x22: "\"",
+			0x23: "#",
+			0x24: "$",
+			0x25: "%",
+			0x26: "&",
+			0x27: "'",
+			0x28: "(",
+			0x29: ")",
+			0x2A: "á",
+			0x2B: "+",
+			0x2C: ",",
+			0x2D: "-",
+			0x2E: ".",
+			0x2F: "/",
+			0x30: "0",
+			0x31: "1",
+			0x32: "2",
+			0x33: "3",
+			0x34: "4",
+			0x35: "5",
+			0x36: "6",
+			0x37: "7",
+			0x38: "8",
+			0x39: "9",
+			0x3A: ":",
+			0x3B: ";",
+			0x3C: "<",
+			0x3D: "=",
+			0x3E: ">",
+			0x3F: "?",
+			0x40: "@",
+			0x41: "A",
+			0x42: "B",
+			0x43: "C",
+			0x44: "D",
+			0x45: "E",
+			0x46: "F",
+			0x47: "G",
+			0x48: "H",
+			0x49: "I",
+			0x4A: "J",
+			0x4B: "K",
+			0x4C: "L",
+			0x4D: "M",
+			0x4E: "N",
+			0x4F: "O",
+			0x50: "P",
+			0x51: "Q",
+			0x52: "R",
+			0x53: "S",
+			0x54: "T",
+			0x55: "U",
+			0x56: "V",
+			0x57: "W",
+			0x58: "X",
+			0x59: "Y",
+			0x5A: "Z",
+			0x5B: "[",
+			0x5C: "é",
+			0x5D: "]",
+			0x5E: "í",
+			0x5F: "ó",
+			0x60: "ú",
+			0x61: "a",
+			0x62: "b",
+			0x63: "c",
+			0x64: "d",
+			0x65: "e",
+			0x66: "f",
+			0x67: "g",
+			0x68: "h",
+			0x69: "i",
+			0x6A: "j",
+			0x6B: "k",
+			0x6C: "l",
+			0x6D: "m",
+			0x6E: "n",
+			0x6F: "o",
+			0x70: "p",
+			0x71: "q",
+			0x72: "r",
+			0x73: "s",
+			0x74: "t",
+			0x75: "u",
+			0x76: "v",
+			0x77: "w",
+			0x78: "x",
+			0x79: "y",
+			0x7A: "z",
+			0x7B: "ç",
+			0x7C: "÷",
+			0x7D: "Ñ",
+			0x7E: "ñ",
+			0x7F: "█",
 		}
 
 	var hex_count: int = hex_codes.size()
@@ -1882,7 +1981,7 @@ func __parse_sub(p_content: String, p_framerate: float = 25.0, p_file_path: Stri
 			continue
 
 		var first_close: int = line.find("}")
-		if first_close < 2:  # Need at least one digit
+		if first_close < 2: # Need at least one digit
 			continue
 
 		var start_frame_str: String = line.substr(1, first_close - 1)
@@ -1935,11 +2034,13 @@ func __parse_sub(p_content: String, p_framerate: float = 25.0, p_file_path: Stri
 		if p_remove_ass_tags:
 			text = __remove_ass_tags(text)
 
-		entries.append({
-			SubtitleEntry._key.START_TIME: start_time,
-			SubtitleEntry._key.END_TIME: end_time,
-			SubtitleEntry._key.TEXT: text.strip_edges()
-		})
+		entries.append(
+			{
+				SubtitleEntry._key.START_TIME: start_time,
+				SubtitleEntry._key.END_TIME: end_time,
+				SubtitleEntry._key.TEXT: text.strip_edges(),
+			},
+		)
 
 	# Post-process: merge consecutive entries with same timestamps
 	entries = __merge_same_timestamp_entries(entries)
@@ -1991,8 +2092,8 @@ func __parse_smi(p_content: String, p_file_path: String = "", p_remove_html_tags
 		var start_ms: String = match.get_string(1)
 		var content_block: String = match.get_string(2)
 
-		var start_time: float = start_ms.to_float() * 0.001  # Multiply by 0.001 instead of dividing by 1000
-		var end_time: float = start_time + 3.0  # Default duration
+		var start_time: float = start_ms.to_float() * 0.001 # Multiply by 0.001 instead of dividing by 1000
+		var end_time: float = start_time + 3.0 # Default duration
 
 		# End time is the start of the next subtitle
 		if i < match_count - 1:
@@ -2003,7 +2104,7 @@ func __parse_smi(p_content: String, p_file_path: String = "", p_remove_html_tags
 		# Extract text from content block
 		var text: String = __extract_smi_text(content_block)
 
-		# Skip empty entries or entries with only whitespace/&nbsp;
+		# Skip empty entries or entries with only whitespace/&nbsp
 		var stripped_text: String = text.strip_edges()
 		if stripped_text.is_empty() or stripped_text == " ":
 			continue
@@ -2014,11 +2115,13 @@ func __parse_smi(p_content: String, p_file_path: String = "", p_remove_html_tags
 		if p_remove_ass_tags:
 			text = __remove_ass_tags(text)
 
-		entries.append({
-			SubtitleEntry._key.START_TIME: start_time,
-			SubtitleEntry._key.END_TIME: end_time,
-			SubtitleEntry._key.TEXT: text.strip_edges()
-		})
+		entries.append(
+			{
+				SubtitleEntry._key.START_TIME: start_time,
+				SubtitleEntry._key.END_TIME: end_time,
+				SubtitleEntry._key.TEXT: text.strip_edges(),
+			},
+		)
 
 	# Post-process: merge consecutive entries with same timestamps
 	entries = __merge_same_timestamp_entries(entries)
@@ -2080,15 +2183,15 @@ func __decode_html_entities(p_text: String) -> String:
 
 	# Common HTML entities - chain for efficiency
 	result = result.replace("&nbsp;", " ") \
-		.replace("&amp;", "&") \
-		.replace("&lt;", "<") \
-		.replace("&gt;", ">") \
-		.replace("&quot;", "\"") \
-		.replace("&apos;", "'") \
-		.replace("&#39;", "'") \
-		.replace("&copy;", "©") \
-		.replace("&reg;", "®") \
-		.replace("&trade;", "™")
+	.replace("&amp;", "&") \
+	.replace("&lt;", "<") \
+	.replace("&gt;", ">") \
+	.replace("&quot;", "\"") \
+	.replace("&apos;", "'") \
+	.replace("&#39;", "'") \
+	.replace("&copy;", "©") \
+	.replace("&reg;", "®") \
+	.replace("&trade;", "™")
 
 	# Numeric entities (basic support) - use cached regex
 	if _smi_entity_regex == null:
@@ -2137,15 +2240,21 @@ func __parse_ebu_stl(p_bytes: PackedByteArray, p_file_path: String = "", p_remov
 	if byte_size >= 6:
 		var dfr_byte: int = p_bytes[5]
 		match dfr_byte:
-			0x31: framerate = 23.976  # STL23.01
-			0x32: framerate = 24.0    # STL24.01
-			0x33: framerate = 25.0    # STL25.01
-			0x34: framerate = 29.97   # STL30.01
-			0x35: framerate = 30.0    # STL30.01
-			_: framerate = 25.0
+			0x31:
+				framerate = 23.976 # STL23.01
+			0x32:
+				framerate = 24.0 # STL24.01
+			0x33:
+				framerate = 25.0 # STL25.01
+			0x34:
+				framerate = 29.97 # STL30.01
+			0x35:
+				framerate = 30.0 # STL30.01
+			_:
+				framerate = 25.0
 
 	# CCT (Character Code Table) is at byte 3 of GSI
-	var cct: int = 0x00  # Default to Latin
+	var cct: int = 0x00 # Default to Latin
 	if byte_size >= 4:
 		cct = p_bytes[3]
 
@@ -2165,8 +2274,9 @@ func __parse_ebu_stl(p_bytes: PackedByteArray, p_file_path: String = "", p_remov
 		offset += 128
 
 	# Sort entries by start time
-	entries.sort_custom(func(p_a: Dictionary, p_b: Dictionary) -> bool:
-		return p_a[SubtitleEntry._key.START_TIME] < p_b[SubtitleEntry._key.START_TIME]
+	entries.sort_custom(
+		func(p_a: Dictionary, p_b: Dictionary) -> bool:
+			return p_a[SubtitleEntry._key.START_TIME] < p_b[SubtitleEntry._key.START_TIME]
 	)
 
 	# Post-process: merge consecutive entries with same timestamps
@@ -2182,7 +2292,7 @@ func __parse_ebu_stl(p_bytes: PackedByteArray, p_file_path: String = "", p_remov
 # Extracts timecodes, cumulative status, and text field data.
 func __parse_ebu_stl_tti_block(p_block: PackedByteArray, p_framerate: float, p_cct: int, p_remove_html_tags: bool = true, p_remove_ass_tags: bool = true) -> Dictionary:
 	if p_block.size() < 128:
-		return {}
+		return { }
 
 	# SGN (Subtitle Group Number) - byte 0
 	var _sgn: int = p_block[0]
@@ -2199,7 +2309,7 @@ func __parse_ebu_stl_tti_block(p_block: PackedByteArray, p_framerate: float, p_c
 	# Skip if this is an extension block (EBN != 0xFF means it's a continuation)
 	# We only process the first block (EBN == 0xFF)
 	if ebn != 0xFF:
-		return {}
+		return { }
 
 	# TCI (Time Code In) - bytes 5-8 (HH:MM:SS:FF)
 	# TCI (Time Code In) - bytes 5-8
@@ -2220,7 +2330,7 @@ func __parse_ebu_stl_tti_block(p_block: PackedByteArray, p_framerate: float, p_c
 
 	# Check for invalid timecodes
 	if start_time < 0 or end_time < 0 or end_time <= start_time:
-		return {}
+		return { }
 
 	# VP (Vertical Position) - byte 13
 	# JC (Justification Code) - byte 14
@@ -2229,14 +2339,14 @@ func __parse_ebu_stl_tti_block(p_block: PackedByteArray, p_framerate: float, p_c
 
 	# Skip comment blocks
 	if cf != 0:
-		return {}
+		return { }
 
 	# TF (Text Field) - bytes 16-127 (112 bytes)
 	var text_field: PackedByteArray = p_block.slice(16, 128)
 	var text: String = __decode_ebu_stl_text_field(text_field, p_cct)
 
 	if text.is_empty():
-		return {}
+		return { }
 
 	if p_remove_html_tags:
 		text = __remove_html_tags(text)
@@ -2247,7 +2357,7 @@ func __parse_ebu_stl_tti_block(p_block: PackedByteArray, p_framerate: float, p_c
 	return {
 		SubtitleEntry._key.START_TIME: start_time,
 		SubtitleEntry._key.END_TIME: end_time,
-		SubtitleEntry._key.TEXT: text.strip_edges()
+		SubtitleEntry._key.TEXT: text.strip_edges(),
 	}
 
 
@@ -2290,11 +2400,11 @@ func __decode_ebu_stl_text_field(p_bytes: PackedByteArray, _p_cct: int) -> Strin
 			# Determine sequence length and copy all bytes
 			var seq_len: int = 0
 			if byte >= 0xF0 and byte <= 0xF7:
-				seq_len = 4  # 4-byte sequence
+				seq_len = 4 # 4-byte sequence
 			elif byte >= 0xE0 and byte <= 0xEF:
-				seq_len = 3  # 3-byte sequence
+				seq_len = 3 # 3-byte sequence
 			elif byte >= 0xC0 and byte <= 0xDF:
-				seq_len = 2  # 2-byte sequence
+				seq_len = 2 # 2-byte sequence
 
 			# Copy the entire UTF-8 sequence
 			for j: int in seq_len:
@@ -2365,10 +2475,10 @@ func __parse_ttxt(p_content: String, p_file_path: String = "", p_remove_html_tag
 		return entries
 
 	var _default_framerate: float = 30.0
-	var timescale: float = 1000.0  # Default timescale (milliseconds)
+	var timescale: float = 1000.0 # Default timescale (milliseconds)
 
 	# Track pending entry (TTXT uses consecutive samples for start/end)
-	var pending_entry: Dictionary = {}
+	var pending_entry: Dictionary = { }
 
 	# Parse document to extract entries
 	while parser.read() == OK:
@@ -2399,23 +2509,24 @@ func __parse_ttxt(p_content: String, p_file_path: String = "", p_remove_html_tag
 						# Start a new pending entry
 						pending_entry = {
 							SubtitleEntry._key.START_TIME: sample_data["time"],
-							SubtitleEntry._key.END_TIME: sample_data["time"] + 3.0,  # Default duration
-							SubtitleEntry._key.TEXT: text_value
+							SubtitleEntry._key.END_TIME: sample_data["time"] + 3.0, # Default duration
+							SubtitleEntry._key.TEXT: text_value,
 						}
 					else:
 						# Empty sample - use as end time for pending entry
 						if not pending_entry.is_empty():
 							pending_entry[SubtitleEntry._key.END_TIME] = sample_data["time"]
 							entries.append(pending_entry)
-							pending_entry = {}
+							pending_entry = { }
 
 	# Add any remaining pending entry
 	if not pending_entry.is_empty():
 		entries.append(pending_entry)
 
 	# Sort entries by start time
-	entries.sort_custom(func(p_a: Dictionary, p_b: Dictionary) -> bool:
-		return p_a[SubtitleEntry._key.START_TIME] < p_b[SubtitleEntry._key.START_TIME]
+	entries.sort_custom(
+		func(p_a: Dictionary, p_b: Dictionary) -> bool:
+			return p_a[SubtitleEntry._key.START_TIME] < p_b[SubtitleEntry._key.START_TIME]
 	)
 
 	# Post-process: merge consecutive entries with same timestamps
@@ -2445,7 +2556,7 @@ func __parse_ttxt_textsample_element(p_parser: XMLParser, p_timescale: float, p_
 
 	# If no sampleTime, skip this element
 	if sampleTime_attr.is_empty():
-		return {}
+		return { }
 
 	# Parse time value - TTXT uses HH:MM:SS.mmm format or numeric timescale units
 	var sample_time: float = 0.0
@@ -2453,7 +2564,7 @@ func __parse_ttxt_textsample_element(p_parser: XMLParser, p_timescale: float, p_
 		# HH:MM:SS.mmm format
 		sample_time = __parse_ttxt_timestamp(sampleTime_attr)
 		if sample_time < 0.0:
-			return {}
+			return { }
 	else:
 		# Numeric timescale units
 		var timescale_reciprocal: float = 1.0 / p_timescale
@@ -2481,7 +2592,7 @@ func __parse_ttxt_textsample_element(p_parser: XMLParser, p_timescale: float, p_
 	# Return parsed data (let the caller handle start/end logic)
 	return {
 		"time": sample_time,
-		"text": text.strip_edges()
+		"text": text.strip_edges(),
 	}
 
 
@@ -2565,7 +2676,7 @@ func __parse_mpl2(p_content: String, p_file_path: String = "", p_remove_html_tag
 	var normalized_content: String = __normalize_line_endings(p_content)
 	var lines: PackedStringArray = normalized_content.split("\n")
 
-	var time_unit: float = 0.1  # MPL2 timestamps are in deciseconds
+	var time_unit: float = 0.1 # MPL2 timestamps are in deciseconds
 
 	# Parse each line of MPL2 subtitle format
 	var line_count: int = lines.size()
@@ -2623,15 +2734,18 @@ func __parse_mpl2(p_content: String, p_file_path: String = "", p_remove_html_tag
 		if p_remove_ass_tags:
 			text = __remove_ass_tags(text)
 
-		entries.append({
-			SubtitleEntry._key.START_TIME: start_time,
-			SubtitleEntry._key.END_TIME: end_time,
-			SubtitleEntry._key.TEXT: text.strip_edges()
-		})
+		entries.append(
+			{
+				SubtitleEntry._key.START_TIME: start_time,
+				SubtitleEntry._key.END_TIME: end_time,
+				SubtitleEntry._key.TEXT: text.strip_edges(),
+			},
+		)
 
 	# Sort by start time
-	entries.sort_custom(func(p_a: Dictionary, p_b: Dictionary) -> bool:
-		return p_a[SubtitleEntry._key.START_TIME] < p_b[SubtitleEntry._key.START_TIME]
+	entries.sort_custom(
+		func(p_a: Dictionary, p_b: Dictionary) -> bool:
+			return p_a[SubtitleEntry._key.START_TIME] < p_b[SubtitleEntry._key.START_TIME]
 	)
 
 	# Post-process: merge consecutive entries with same timestamps
@@ -2651,7 +2765,7 @@ func __parse_tmp(p_content: String, p_file_path: String = "", p_remove_html_tags
 	var lines: PackedStringArray = normalized_content.split("\n")
 
 	var temp_entries: Array[Dictionary] = []
-	var current_entry: Dictionary = {}
+	var current_entry: Dictionary = { }
 
 	# Parse each line of TMP subtitle format
 	var line_count: int = lines.size()
@@ -2709,7 +2823,7 @@ func __parse_tmp(p_content: String, p_file_path: String = "", p_remove_html_tags
 				# Start new entry
 				current_entry = {
 					"start": start_time,
-					"text": text
+					"text": text,
 				}
 		else:
 			# Continuation line - append to current entry
@@ -2725,8 +2839,9 @@ func __parse_tmp(p_content: String, p_file_path: String = "", p_remove_html_tags
 		temp_entries.append(current_entry)
 
 	# Sort by start time
-	temp_entries.sort_custom(func(p_a: Dictionary, p_b: Dictionary) -> bool:
-		return p_a["start"] < p_b["start"]
+	temp_entries.sort_custom(
+		func(p_a: Dictionary, p_b: Dictionary) -> bool:
+			return p_a["start"] < p_b["start"]
 	)
 
 	# Calculate end times based on next subtitle or default duration
@@ -2753,11 +2868,13 @@ func __parse_tmp(p_content: String, p_file_path: String = "", p_remove_html_tags
 		if p_remove_ass_tags:
 			text = __remove_ass_tags(text)
 
-		entries.append({
-			SubtitleEntry._key.START_TIME: start_time,
-			SubtitleEntry._key.END_TIME: end_time,
-			SubtitleEntry._key.TEXT: text.strip_edges()
-		})
+		entries.append(
+			{
+				SubtitleEntry._key.START_TIME: start_time,
+				SubtitleEntry._key.END_TIME: end_time,
+				SubtitleEntry._key.TEXT: text.strip_edges(),
+			},
+		)
 
 	# Post-process: merge consecutive entries with same timestamps
 	entries = __merge_same_timestamp_entries(entries)
@@ -2832,11 +2949,13 @@ func __parse_encore(p_content: String, p_framerate: float = 25.0, p_file_path: S
 		if p_remove_ass_tags:
 			text = __remove_ass_tags(text)
 
-		entries.append({
-			SubtitleEntry._key.START_TIME: start_time,
-			SubtitleEntry._key.END_TIME: end_time,
-			SubtitleEntry._key.TEXT: text.strip_edges()
-		})
+		entries.append(
+			{
+				SubtitleEntry._key.START_TIME: start_time,
+				SubtitleEntry._key.END_TIME: end_time,
+				SubtitleEntry._key.TEXT: text.strip_edges(),
+			},
+		)
 
 	# Post-process: merge consecutive entries with same timestamps
 	entries = __merge_same_timestamp_entries(entries)
@@ -2940,11 +3059,13 @@ func __parse_transtation(p_content: String, p_framerate: float = 30.0, p_file_pa
 		if p_remove_ass_tags:
 			text = __remove_ass_tags(text)
 
-		entries.append({
-			SubtitleEntry._key.START_TIME: start_time,
-			SubtitleEntry._key.END_TIME: end_time,
-			SubtitleEntry._key.TEXT: text
-		})
+		entries.append(
+			{
+				SubtitleEntry._key.START_TIME: start_time,
+				SubtitleEntry._key.END_TIME: end_time,
+				SubtitleEntry._key.TEXT: text,
+			},
+		)
 
 	# Post-process: merge consecutive entries with same timestamps
 	entries = __merge_same_timestamp_entries(entries)
@@ -2969,10 +3090,10 @@ func __parse_transtation_timecode(p_timecode: String, p_framerate: float) -> flo
 
 	return hours * 3600.0 + minutes * 60.0 + seconds + (frames / p_framerate)
 
-
 # ============================================================================
 # BASE HELPER FUNCTIONS (from SubtitleParser)
 # ============================================================================
+
 
 # Merges subtitle entries that have identical start and end timestamps by concatenating their text with newlines.
 # This helps consolidate multi-line subtitles that were split into separate entries.
@@ -3004,7 +3125,7 @@ func __merge_same_timestamp_entries(p_entries: Array[Dictionary]) -> Array[Dicti
 
 			# Use single comparison with tolerance
 			if start_diff < TIMESTAMP_TOLERANCE and start_diff > -TIMESTAMP_TOLERANCE and \
-			   end_diff < TIMESTAMP_TOLERANCE and end_diff > -TIMESTAMP_TOLERANCE:
+			end_diff < TIMESTAMP_TOLERANCE and end_diff > -TIMESTAMP_TOLERANCE:
 				var next_text: String = next[SubtitleEntry._key.TEXT]
 				if not next_text.is_empty():
 					var _append_idx2: int = text_parts.append(next_text)
@@ -3019,7 +3140,7 @@ func __merge_same_timestamp_entries(p_entries: Array[Dictionary]) -> Array[Dicti
 		merged[merged_count] = {
 			SubtitleEntry._key.START_TIME: start_time,
 			SubtitleEntry._key.END_TIME: end_time,
-			SubtitleEntry._key.TEXT: combined_text
+			SubtitleEntry._key.TEXT: combined_text,
 		}
 		merged_count += 1
 
@@ -3045,7 +3166,7 @@ func __check_overlapping_intervals(p_entries: Array[Dictionary], p_parser_name: 
 		var current_end: float = current[SubtitleEntry._key.END_TIME]
 
 		# Only check entries that could potentially overlap
-		var check_limit: int = mini(i + 10, entry_count)  # Check at most 10 entries ahead
+		var check_limit: int = mini(i + 10, entry_count) # Check at most 10 entries ahead
 		for j: int in range(i + 1, check_limit):
 			var next: Dictionary = p_entries[j]
 			var next_start: float = next[SubtitleEntry._key.START_TIME]
@@ -3067,13 +3188,28 @@ func __check_overlapping_intervals(p_entries: Array[Dictionary], p_parser_name: 
 					overlap_count += 1
 					if warning_count < MAX_OVERLAP_WARNINGS:
 						if p_file_path:
-							push_warning("%s (%s): Overlapping subtitles detected at %.2fs-%.2fs and %.2fs-%.2fs (%.2fs overlap)" % [
-								p_parser_name, p_file_path, current_start, current_end, next_start, next_end, overlap_amount
-							])
+							push_warning(
+								"%s (%s): Overlapping subtitles detected at %.2fs-%.2fs and %.2fs-%.2fs (%.2fs overlap)" % [
+									p_parser_name,
+									p_file_path,
+									current_start,
+									current_end,
+									next_start,
+									next_end,
+									overlap_amount,
+								],
+							)
 						else:
-							push_warning("%s: Overlapping subtitles detected at %.2fs-%.2fs and %.2fs-%.2fs (%.2fs overlap)" % [
-								p_parser_name, current_start, current_end, next_start, next_end, overlap_amount
-							])
+							push_warning(
+								"%s: Overlapping subtitles detected at %.2fs-%.2fs and %.2fs-%.2fs (%.2fs overlap)" % [
+									p_parser_name,
+									current_start,
+									current_end,
+									next_start,
+									next_end,
+									overlap_amount,
+								],
+							)
 						warning_count += 1
 
 	if overlap_count > 0:
@@ -3081,7 +3217,6 @@ func __check_overlapping_intervals(p_entries: Array[Dictionary], p_parser_name: 
 			push_warning("%s (%s): Total overlapping subtitle pairs: %d. Linear dialogue format may not support this properly." % [p_parser_name, p_file_path, overlap_count])
 		else:
 			push_warning("%s: Total overlapping subtitle pairs: %d. Linear dialogue format may not support this properly." % [p_parser_name, overlap_count])
-
 
 
 # Removes HTML/formatting tags from text using regex (<tag>content</tag> becomes content).

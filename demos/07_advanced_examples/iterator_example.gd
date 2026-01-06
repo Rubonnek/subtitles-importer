@@ -1,38 +1,8 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 extends Node
 ## Example demonstrating the SubtitleEntry iterator and helper methods.
 ##
 ## This example shows how to use the new iterator functionality
 ## to loop through subtitle entries using SubtitleEntry objects.
-
 
 func _ready() -> void:
 	_example_basic_iterator()
@@ -65,15 +35,17 @@ Third subtitle line
 		print("Using iterator to loop through entries:")
 		# The subtitles object is now iterable!
 		for entry: SubtitleEntry in subtitles:
-			print("  ", entry)  # Uses SubtitleEntry._to_string()
+			print("  ", entry) # Uses SubtitleEntry._to_string()
 
 		print("\nAccessing individual fields:")
 		for entry: SubtitleEntry in subtitles:
-			print("  Start: %.2fs, End: %.2fs, Duration: %.2fs" % [
-				entry.get_start_time(),
-				entry.get_end_time(),
-				entry.get_duration()
-			])
+			print(
+				"  Start: %.2fs, End: %.2fs, Duration: %.2fs" % [
+					entry.get_start_time(),
+					entry.get_end_time(),
+					entry.get_duration(),
+				],
+			)
 			print("    Text: ", entry.get_text())
 
 
@@ -97,8 +69,8 @@ func _example_helper_methods() -> void:
 
 	# Out of bounds handling
 	print("\nOut of bounds test:")
-	print("  Entry at index 99: ", subtitles.get_entry_text(99))  # Returns ""
-	print("  Start time at index -1: ", subtitles.get_entry_start_time(-1))  # Returns 0.0
+	print("  Entry at index 99: ", subtitles.get_entry_text(99)) # Returns ""
+	print("  Start time at index -1: ", subtitles.get_entry_start_time(-1)) # Returns 0.0
 
 
 ## Example 3: Using SubtitleEntry wrapper objects

@@ -1,33 +1,5 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 extends Node
+
 ## Example script demonstrating runtime subtitle parsing and usage.
 ##
 ## This example shows various ways to use the Subtitles resource at runtime.
@@ -112,13 +84,13 @@ func _example_parse_different_formats() -> void:
 		print("Parsed LRC entries:")
 		# Using SubtitleEntry iterator
 		for entry: SubtitleEntry in lrc_subtitle:
-			print("  ", entry)  # Uses _to_string()
+			print("  ", entry) # Uses _to_string()
 			# Or access individual fields:
 			# print("  [%.2f - %.2f] %s" % [entry.get_start_time(), entry.get_end_time(), entry.get_text()])
 
-
 ## Example 4: Sync subtitles with video playback (optimized with entry ID caching)
 var _last_entry_id: int = -1
+
 
 func _process(_p_delta: float) -> void:
 	if video_player == null or subtitle_label == null:

@@ -1,38 +1,8 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 extends Node
 ## Frame-based formats demo for the Subtitles Importer plugin.
 ##
 ## This demo shows how to parse frame-based subtitle formats with custom
 ## framerates. Frame-based formats use frame numbers instead of timestamps.
-
 
 func _ready() -> void:
 	_demo_parse_microdvd()
@@ -58,11 +28,13 @@ func _demo_parse_microdvd() -> void:
 	if error == OK:
 		print("MicroDVD parsed at 29.97 fps:")
 		for entry: SubtitleEntry in subtitles:
-			print("  [%.2fs - %.2fs] %s" % [
-				entry.get_start_time(),
-				entry.get_end_time(),
-				entry.get_text()
-			])
+			print(
+				"  [%.2fs - %.2fs] %s" % [
+					entry.get_start_time(),
+					entry.get_end_time(),
+					entry.get_text(),
+				],
+			)
 	else:
 		printerr("Failed to parse MicroDVD content")
 
@@ -83,11 +55,13 @@ func _demo_parse_mpl2() -> void:
 	if error == OK:
 		print("MPL2 parsed at 25 fps:")
 		for entry: SubtitleEntry in subtitles:
-			print("  [%.2fs - %.2fs] %s" % [
-				entry.get_start_time(),
-				entry.get_end_time(),
-				entry.get_text()
-			])
+			print(
+				"  [%.2fs - %.2fs] %s" % [
+					entry.get_start_time(),
+					entry.get_end_time(),
+					entry.get_text(),
+				],
+			)
 	else:
 		printerr("Failed to parse MPL2 content")
 
@@ -136,11 +110,13 @@ func _demo_parse_tmp() -> void:
 	if error == OK:
 		print("TMPlayer parsed:")
 		for entry: SubtitleEntry in subtitles:
-			print("  [%.2fs - %.2fs] %s" % [
-				entry.get_start_time(),
-				entry.get_end_time(),
-				entry.get_text()
-			])
+			print(
+				"  [%.2fs - %.2fs] %s" % [
+					entry.get_start_time(),
+					entry.get_end_time(),
+					entry.get_text(),
+				],
+			)
 	else:
 		printerr("Failed to parse TMPlayer content")
 

@@ -35,12 +35,11 @@ extends RefCounted
 ## Provides a clean interface for accessing subtitle entry data
 ## without exposing the internal dictionary structure.
 
-
 # Enum for dictionary keys to avoid string-based lookups (private convention: lowercase)
 enum _key {
 	START_TIME,
 	END_TIME,
-	TEXT
+	TEXT,
 }
 
 var _entry_dict: Dictionary

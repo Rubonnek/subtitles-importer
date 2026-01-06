@@ -1,32 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 extends Node
 ## Basic usage demo for the Subtitles Importer plugin.
 ##

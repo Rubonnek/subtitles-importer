@@ -1,38 +1,8 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 extends Node
 ## Runtime parsing demo for the Subtitles Importer plugin.
 ##
 ## This demo shows how to parse subtitle content from strings at runtime
 ## and load subtitle files dynamically.
-
 
 func _ready() -> void:
 	_example_parse_from_string()

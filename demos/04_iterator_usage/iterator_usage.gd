@@ -1,38 +1,8 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 extends Node
 ## Iterator usage demo for the Subtitles Importer plugin.
 ##
 ## This demo shows how to iterate through subtitle entries using the
 ## SubtitleEntry iterator and check if entries are active at specific times.
-
 
 func _ready() -> void:
 	# Create sample subtitle data
@@ -51,11 +21,13 @@ func _demo_iterate_through_entries(subtitles: Subtitles) -> void:
 	print("\n=== Iterate Through All Subtitle Entries ===\n")
 
 	for entry: SubtitleEntry in subtitles:
-		print("[%.2f - %.2f] %s" % [
-			entry.get_start_time(),
-			entry.get_end_time(),
-			entry.get_text()
-		])
+		print(
+			"[%.2f - %.2f] %s" % [
+				entry.get_start_time(),
+				entry.get_end_time(),
+				entry.get_text(),
+			],
+		)
 
 
 ## Demo: Check if entry is active at specific time

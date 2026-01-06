@@ -1,37 +1,7 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 extends Node
 ## Querying subtitles demo for the Subtitles Importer plugin.
 ##
 ## This demo shows various ways to query subtitle data using the Subtitles API.
-
 
 func _ready() -> void:
 	# Create sample subtitle data
@@ -79,11 +49,13 @@ func _demo_get_subtitles_in_range(subtitles: Subtitles) -> void:
 	var entries: Array[Dictionary] = subtitles.get_subtitles_in_range(3.0, 8.0)
 	print("Subtitles between 3.0s and 8.0s:")
 	for entry: Dictionary in entries:
-		print("  [%.1f - %.1f] %s" % [
-			entry.get("start_time", 0.0),
-			entry.get("end_time", 0.0),
-			entry.get("text", "")
-		])
+		print(
+			"  [%.1f - %.1f] %s" % [
+				entry.get("start_time", 0.0),
+				entry.get("end_time", 0.0),
+				entry.get("text", ""),
+			],
+		)
 
 
 ## Demo: Get total duration and entry count

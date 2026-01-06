@@ -1,38 +1,8 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 extends Node
 ## HTML and ASS tag removal demo for the Subtitles Importer plugin.
 ##
 ## This demo shows how to remove HTML and ASS/SSA formatting tags during
 ## subtitle parsing for clean text output.
-
 
 func _ready() -> void:
 	_demo_remove_html_tags()

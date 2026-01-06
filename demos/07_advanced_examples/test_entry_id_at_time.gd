@@ -1,39 +1,9 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @tool
 extends EditorScript
 ## Test script to verify the get_entry_id_at_time() function.
 ##
 ## This script tests that get_entry_id_at_time() returns the correct entry index
 ## for various time values and validates edge cases.
-
 
 func _run() -> void:
 	print("\n=== Testing get_entry_id_at_time() Function ===\n")
@@ -72,19 +42,19 @@ Third subtitle
 
 	# Test times within subtitle ranges
 	var test_cases: Array = [
-		{"time": 0.5, "expected": -1, "desc": "Before first subtitle"},
-		{"time": 1.0, "expected": 0, "desc": "Start of first subtitle"},
-		{"time": 2.0, "expected": 0, "desc": "Middle of first subtitle"},
-		{"time": 3.0, "expected": 0, "desc": "End of first subtitle"},
-		{"time": 3.5, "expected": -1, "desc": "Between first and second"},
-		{"time": 4.0, "expected": 1, "desc": "Start of second subtitle"},
-		{"time": 5.0, "expected": 1, "desc": "Middle of second subtitle"},
-		{"time": 6.0, "expected": 1, "desc": "End of second subtitle"},
-		{"time": 6.5, "expected": -1, "desc": "Between second and third"},
-		{"time": 7.0, "expected": 2, "desc": "Start of third subtitle"},
-		{"time": 8.0, "expected": 2, "desc": "Middle of third subtitle"},
-		{"time": 9.0, "expected": 2, "desc": "End of third subtitle"},
-		{"time": 10.0, "expected": -1, "desc": "After last subtitle"}
+		{ "time": 0.5, "expected": -1, "desc": "Before first subtitle" },
+		{ "time": 1.0, "expected": 0, "desc": "Start of first subtitle" },
+		{ "time": 2.0, "expected": 0, "desc": "Middle of first subtitle" },
+		{ "time": 3.0, "expected": 0, "desc": "End of first subtitle" },
+		{ "time": 3.5, "expected": -1, "desc": "Between first and second" },
+		{ "time": 4.0, "expected": 1, "desc": "Start of second subtitle" },
+		{ "time": 5.0, "expected": 1, "desc": "Middle of second subtitle" },
+		{ "time": 6.0, "expected": 1, "desc": "End of second subtitle" },
+		{ "time": 6.5, "expected": -1, "desc": "Between second and third" },
+		{ "time": 7.0, "expected": 2, "desc": "Start of third subtitle" },
+		{ "time": 8.0, "expected": 2, "desc": "Middle of third subtitle" },
+		{ "time": 9.0, "expected": 2, "desc": "End of third subtitle" },
+		{ "time": 10.0, "expected": -1, "desc": "After last subtitle" },
 	]
 
 	var passed: int = 0

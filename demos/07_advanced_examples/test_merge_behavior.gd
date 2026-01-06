@@ -1,39 +1,9 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @tool
 extends EditorScript
 ## Test script to demonstrate the merge behavior of the Subtitles class.
 ##
 ## This script creates test subtitle data with duplicate timestamps
 ## and verifies that they are properly merged by the Subtitles class parsers.
-
 
 func _run() -> void:
 	print("\n=== Testing Subtitles Class Merge Behavior ===\n")

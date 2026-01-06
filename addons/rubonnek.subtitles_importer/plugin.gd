@@ -91,7 +91,7 @@ func _on_inject_subtitles() -> void:
 
 	# Find Subtitles from selected files
 	for path: String in selected_paths:
-		var file_extension : String = path.get_extension().to_lower()
+		var file_extension: String = path.get_extension().to_lower()
 		if file_extension in Subtitles.supported_extensions:
 			var resource: Resource = load(path)
 			if resource is Subtitles:
@@ -146,7 +146,7 @@ func _on_inject_subtitles() -> void:
 			"Duration: " + str(subtitles.get_total_duration()) + " seconds\n" +
 			"Subtitle count: " + str(subtitles.get_entry_count()) + "\n\n" +
 			"You can now play the animation in the AnimationPlayer!\n" +
-			"Note: Make sure the label is visible in your scene to see subtitles."
+			"Note: Make sure the label is visible in your scene to see subtitles.",
 		)
 	else:
 		printerr("✗ Failed to create subtitle animation.")
@@ -176,9 +176,6 @@ func _create_subtitle_animation(p_subtitles: Subtitles, p_label_node: Control, p
 	print("  - Text track with ", p_subtitles.get_entry_count(), " keyframes")
 
 	return true
-
-
-
 
 
 func _show_success(p_message: String) -> void:
