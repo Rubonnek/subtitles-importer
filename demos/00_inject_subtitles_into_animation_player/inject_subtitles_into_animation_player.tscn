@@ -28,8 +28,9 @@ layout_mode = 2
 text = "Instructions:
 
 1. In the scene tree, hold Ctrl on your keyboard to select both an AnimationPlayer and Label (or RichTextLabel). As an example, in this scene you should select SelectMeLabel and SelectMeAnimationPlayer.
-2. In the FileSystem stab, select one subtitle file in any of the supported formats.
+2. In the FileSystem stab, select one subtitle file in any of the supported formats. The subtitle files are located in res://demos/00_inject_subtitles_into_animation_player/subtitles/.
 3. Finally click `Project -> Tools -> Inject Subtitles into AnimationPlayer`, select the `subtitles` in the selected AnimationPlayer and click the auto-play and done!
+NOTE: You can optionally also select an AudioStreamPlayer as well, and you must select the associated audio respectively if you'd like audio and the subtitles to be within the same animation.
 "
 autowrap_mode = 3
 
