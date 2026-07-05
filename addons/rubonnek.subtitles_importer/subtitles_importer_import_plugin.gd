@@ -52,7 +52,7 @@ func _get_save_extension() -> String:
 
 
 func _get_resource_type() -> String:
-	return "Subtitles"
+	return "Resource"
 
 
 func _get_preset_count() -> int:
